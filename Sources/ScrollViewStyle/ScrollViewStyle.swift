@@ -203,15 +203,15 @@ public enum OffsetType {
 }
 
 public extension View {
-    @ViewBuilder func scroll(offset: OffsetType) -> some View {
+    @ViewBuilder func scroll(offset: OffsetType, height: CGFloat) -> some View {
         self
-            .modifier(OffsetViewModifier(offset: offset))
+            .modifier(OffsetViewModifier(offset: offset, oldHeight: height))
     }
 }
 
 struct OffsetViewModifier: ViewModifier {
     let offset: OffsetType
-    @State var oldHeight: CGFloat = 0
+    @State var oldHeight: CGFloat
     @State var newHeight: CGFloat = 0
     @State var padding: (Edge, CGFloat) = (.top, 0)
     @Environment(\.prefrenceContext) var context
@@ -240,11 +240,11 @@ struct OffsetViewModifier: ViewModifier {
                 }
             }
             .frame(height: newHeight)
-            .onChange(of: .height) { newValue in
-                if oldHeight == 0 {
-                    oldHeight = newValue
-                }
-            }
+//            .onChange(of: .height) { newValue in
+//                if oldHeight == 0 {
+//                    oldHeight = newValue
+//                }
+//            }
     }
 }
 
