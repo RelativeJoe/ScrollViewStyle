@@ -25,6 +25,8 @@ public struct ComplexScrollViewStyle: ScrollViewStyle {
     }
     public func makeUIScrollView(_ scrollView: UIScrollView) {
     }
+    public init() {
+    }
 }
 
 //@available(iOS 14.0, *)
