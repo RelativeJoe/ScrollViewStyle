@@ -15,7 +15,8 @@ let package = Package(
             targets: ["ScrollViewStyle"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/siteline/SwiftUI-Introspect", "0.1.4"..<"1.0.0")
+        .package(url: "https://github.com/siteline/SwiftUI-Introspect", "0.1.4"..<"1.0.0"),
+        .package(url: "https://github.com/TimmysApp/STools", branch: "master")
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
@@ -23,7 +24,8 @@ let package = Package(
         .target(
             name: "ScrollViewStyle",
             dependencies: [
-                .product(name: "Introspect", package: "SwiftUI-Introspect")
+                .product(name: "Introspect", package: "SwiftUI-Introspect"),
+                .product(name: "STools", package: "STools")
             ]),
         .testTarget(
             name: "ScrollViewStyleTests",
