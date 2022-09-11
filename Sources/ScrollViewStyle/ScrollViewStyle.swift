@@ -232,9 +232,9 @@ struct OffsetViewModifier: ViewModifier {
                     case .resize(let height, let speed):
                         let negativeToAssign = oldHeight - context.offset * (speed ?? 100)/100
                         let positiveToAssign = oldHeight + context.offset * (speed ?? 100)/100
-                        if negativeToAssign < height  {
+                        if negativeToAssign > height  {
                             newHeight = negativeToAssign
-                        }else if positiveToAssign > height {
+                        }else if positiveToAssign < height {
                             newHeight = positiveToAssign
                         }
                 }
@@ -272,16 +272,9 @@ extension View {
     }
     @ViewBuilder func onChange(of element: SizeChange, newValue: Binding<CGFloat>) -> some View {
         self
-            .background(
-                GeometryReader { reader in
-                    Color.clear
-                        .onAppear {
-                            newValue.wrappedValue = reader.frame(in: .global).height
-                        }.onChange(of: element == .height ? reader.frame(in: .global).height: reader.frame(in: .global).width) { newValuey in
-                            newValue.wrappedValue = newValuey
-                        }
-                }
-            )
+            .onChange(of: element) { value in
+                newValue.wrappedValue = value
+            }
     }
 }
 
