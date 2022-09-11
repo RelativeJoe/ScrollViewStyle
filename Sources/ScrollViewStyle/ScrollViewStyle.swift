@@ -248,9 +248,9 @@ struct OffsetViewModifier: ViewModifier {
 }
 
 @available(iOS 13.0, *)
-struct OffsetPreferenceKey: PreferenceKey {
-    static var defaultValue: Context?
-    static func reduce(value: inout Context?, nextValue: () -> Context?) {
+public struct OffsetPreferenceKey: PreferenceKey {
+    public static var defaultValue: Context?
+    public static func reduce(value: inout Context?, nextValue: () -> Context?) {
         value = nextValue()
     }
 }
