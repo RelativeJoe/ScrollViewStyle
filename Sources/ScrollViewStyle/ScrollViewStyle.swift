@@ -211,10 +211,15 @@ public extension View {
 
 struct OffsetViewModifier: ViewModifier {
     let offset: OffsetType
-    @State var oldHeight: CGFloat
+    let oldHeight: CGFloat
     @State var newHeight: CGFloat = 0
     @State var padding: (Edge, CGFloat) = (.top, 0)
     @Environment(\.prefrenceContext) var context
+    init(offset: OffsetType, oldHeight: CGFloat) {
+        self.offset = offset
+        self.oldHeight = oldHeight
+        self._newHeight = State(wrappedValue: oldHeight)
+    }
     func body(content: Content) -> some View {
         content
             .onChange(of: context) { value in
