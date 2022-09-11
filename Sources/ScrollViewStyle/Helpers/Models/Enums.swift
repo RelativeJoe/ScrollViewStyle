@@ -12,6 +12,6 @@ public enum ScrollDirection {
 }
 
 public enum OffsetType {
-    case padding(edge: Edge, maxValue: CGFloat? = nil, speed: CGFloat? = nil)
-    case resize(height: CGFloat, speed: CGFloat? = nil)
+    case padding(edge: Edge.Set, maxValue: CGFloat? = nil, speed: CGFloat? = nil)
+    case resize(height: CGFloat, speed: CGFloat? = nil, minOffset: CGFloat? = nil, minHeight: CGFloat? = nil)
 }
