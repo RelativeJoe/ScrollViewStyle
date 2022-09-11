@@ -262,7 +262,9 @@ extension View {
             .background(
                 GeometryReader { reader in
                     Color.clear
-                        .onChange(of: element == .height ? reader.frame(in: .global).height: reader.frame(in: .global).width) { newValue in
+                        .onAppear {
+                            action(reader.frame(in: .global).height)
+                        }.onChange(of: element == .height ? reader.frame(in: .global).height: reader.frame(in: .global).width) { newValue in
                             action(newValue)
                         }
                 }
@@ -273,7 +275,9 @@ extension View {
             .background(
                 GeometryReader { reader in
                     Color.clear
-                        .onChange(of: element == .height ? reader.frame(in: .global).height: reader.frame(in: .global).width) { newValuey in
+                        .onAppear {
+                            newValue.wrappedValue = reader.frame(in: .global).height
+                        }.onChange(of: element == .height ? reader.frame(in: .global).height: reader.frame(in: .global).width) { newValuey in
                             newValue.wrappedValue = newValuey
                         }
                 }
