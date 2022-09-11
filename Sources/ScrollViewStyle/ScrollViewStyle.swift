@@ -232,9 +232,9 @@ struct OffsetViewModifier: ViewModifier {
                     case .resize(let height, let speed):
                         let negativeToAssign = oldHeight - context.offset * (speed ?? 100)/100
                         let positiveToAssign = oldHeight + context.offset * (speed ?? 100)/100
-                        if negativeToAssign > height  {
+                        if negativeToAssign < height  {
                             newHeight = negativeToAssign
-                        }else if positiveToAssign < height {
+                        }else if positiveToAssign > height {
                             newHeight = positiveToAssign
                         }
                 }
