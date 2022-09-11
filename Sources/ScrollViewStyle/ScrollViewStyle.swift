@@ -214,9 +214,10 @@ struct OffsetViewModifier: ViewModifier {
     @State var oldHeight: CGFloat = 0
     @State var newHeight: CGFloat = 0
     @State var padding: (Edge, CGFloat) = (.top, 0)
+    @Environment(\.prefrenceContext) var context
     func body(content: Content) -> some View {
         content
-            .onPreferenceChange(OffsetPreferenceKey.self) { value in
+            .onChange(of: context) { value in
                 guard let context = value else {
                     return
                 }
@@ -282,4 +283,36 @@ extension View {
 
 enum SizeChange: Int {
     case height, width
+}
+
+internal struct ContextKey: EnvironmentKey {
+    internal static let defaultValue: Context? = nil
+}
+
+internal extension EnvironmentValues {
+    var prefrenceContext: Context? {
+        get {
+            self[ContextKey.self]
+        }
+        set {
+            self[ContextKey.self] = newValue
+        }
+    }
+}
+
+public extension View {
+    func scrollContainer() -> some View {
+        self.modifier(PrefrenceContextModifier())
+    }
+}
+
+struct PrefrenceContextModifier: ViewModifier {
+    @State var context: Context?
+    func body(content: Content) -> some View {
+        content
+            .environment(\.prefrenceContext, context)
+            .onPreferenceChange(OffsetPreferenceKey.self) { value in
+                context = value
+            }
+    }
 }
