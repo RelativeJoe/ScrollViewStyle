@@ -32,16 +32,16 @@ struct ScrollViewStyleModifider<Style: ScrollViewStyle>: ViewModifier {
 }
 
 public extension ScrollView {
-    @ViewBuilder func scrollViewStyle<Style: ScrollViewStyle>(_ style: Style) -> some View where Style.Content == WrapperView<Self, Style> {
+    @ViewBuilder func scrollViewStyle<Style: ScrollViewStyle>(_ style: Style) -> some View where Style.Content == WrapperView<Self> {
         self.modifier(ScrollViewStyleModifider(style: style))
     }
 }
 
-public struct WrapperView<Content: View, Style: ScrollViewStyle>: View {
+public struct WrapperView<Content: View>: View {
     var content: Content
     @ObservedObject var coordinator: ScrollViewCoordinator
     @Binding var context: Context
-    let style: Style
+    let style: any ScrollViewStyle
     public var body: some View {
         GeometryReader { proxy in
             content
