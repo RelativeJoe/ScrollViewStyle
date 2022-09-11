@@ -11,14 +11,14 @@ import Introspect
 @available(iOS 13.0, *)
 public protocol ScrollViewStyle {
     associatedtype Body: View
-    associatedtype Content: View
-    @ViewBuilder @MainActor func body(content: Self.Content, context: Context) -> Self.Body
+//    associatedtype Content: View
+    @ViewBuilder @MainActor func body(content: AnyView, context: Context) -> Self.Body
     func makeUIScrollView(_ scrollView: UIScrollView)
 }
 
 @available(iOS 13.0, *)
 internal extension ScrollViewStyle {
-    @ViewBuilder @MainActor func makeBody(context: Context, @ViewBuilder content: @escaping () -> Self.Content) -> some View {
-        body(content: content(), context: context)
+    @ViewBuilder @MainActor func makeBody(context: Context, @ViewBuilder content: @escaping () -> some View) -> some View {
+        body(content: AnyView(content()), context: context)
     }
 }

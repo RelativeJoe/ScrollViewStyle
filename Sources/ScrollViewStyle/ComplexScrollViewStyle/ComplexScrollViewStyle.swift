@@ -10,7 +10,7 @@ import SwiftUI
 
 @available(iOS 14.0, *)
 public struct ComplexScrollViewStyle<Content: View>: ScrollViewStyle {
-    public func body(content: Content, context: Context) -> some View {
+    public func body(content: AnyView, context: Context) -> some View {
         content
             .preference(key: OffsetPreferenceKey.self, value: context)
     }
@@ -18,11 +18,5 @@ public struct ComplexScrollViewStyle<Content: View>: ScrollViewStyle {
         print(scrollView.frame)
     }
     public init() {
-    }
-}
-
-public extension ScrollViewStyle {
-    static var complex: ComplexScrollViewStyle<Self.Content> {
-        return ComplexScrollViewStyle()
     }
 }
