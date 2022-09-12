@@ -8,17 +8,17 @@
 import SwiftUI
 
 public struct OffsetsWrapper<Content: View>: View {
-    @State private var offsets = [OffsetType]()
-    private var content: Content
-    @State private var width: CGFloat?
-    @State private var height: CGFloat?
-    private var alignment: Alignment?
-    internal init(content: Content, width: CGFloat? = nil, height: CGFloat? = nil, alignment: Alignment? = nil) {
-        self.content = content
-        self._width = State(wrappedValue: width)
-        self._height = State(wrappedValue: height)
-        self.alignment = alignment
-    }
+    @State var offsets = [OffsetType]()
+    var content: Content
+    @State  var width: CGFloat?
+    @State var height: CGFloat?
+    var alignment: Alignment?
+//    internal init(content: Content, width: CGFloat? = nil, height: CGFloat? = nil, alignment: Alignment? = nil) {
+//        self.content = content
+//        self._width = State(wrappedValue: width)
+//        self._height = State(wrappedValue: height)
+//        self.alignment = alignment
+//    }
     public var body: some View {
         content
             .onChange(of: .height) { heighty in
@@ -30,8 +30,9 @@ public struct OffsetsWrapper<Content: View>: View {
             }.modifier(OffsetViewModifier(offsets: offsets, oldHeight: height, oldWidth: width, alignment: alignment))
     }
     public func onScroll(offset: OffsetType) -> OffsetsWrapper {
-        self.offsets.append(offset)
-        return self
+        var offsetsy = offsets
+        offsetsy.append(offset)
+        return OffsetsWrapper(offsets: offsetsy, content: content, width: width, height: height, alignment: alignment)
     }
 }
 
