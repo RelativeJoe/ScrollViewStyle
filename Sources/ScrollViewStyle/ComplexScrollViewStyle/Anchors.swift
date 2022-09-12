@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-extension View {
+public extension View {
     @ViewBuilder func anchor<T: CustomStringConvertible>(id: T) -> some View {
         GeometryReader { reader in
             self
