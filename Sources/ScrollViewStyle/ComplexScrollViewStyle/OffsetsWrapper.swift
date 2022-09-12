@@ -29,7 +29,7 @@ public struct OffsetsWrapper<Content: View>: View {
                 width = widthy
             }.modifier(OffsetViewModifier(offsets: offsets, oldHeight: height, oldWidth: width, alignment: alignment))
     }
-    public func onScroll(offset: OffsetType, height: CGFloat? = nil) -> OffsetsWrapper {
+    public func onScroll(offset: OffsetType) -> OffsetsWrapper {
         self.offsets.append(offset)
         return self
     }
