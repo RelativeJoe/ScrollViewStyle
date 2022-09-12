@@ -13,7 +13,7 @@ public protocol ScrollViewStyle {
 //    associatedtype Content: View
     @ViewBuilder @MainActor func body(content: AnyView, context: Context) -> Self.Body
     func makeUIScrollView(_ scrollView: UIScrollView)
-    func coordinator() -> ScrollViewCoordinator
+    func makeCoordinator() -> ScrollViewCoordinator
 }
 
 internal extension ScrollViewStyle {
@@ -23,7 +23,7 @@ internal extension ScrollViewStyle {
 }
 
 public extension ScrollViewStyle {
-    func coordinator() -> ScrollViewCoordinator {
+    func makeCoordinator() -> ScrollViewCoordinator {
         return ScrollViewCoordinator()
     }
 }
