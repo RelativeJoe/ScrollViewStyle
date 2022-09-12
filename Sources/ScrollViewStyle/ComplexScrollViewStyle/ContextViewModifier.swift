@@ -13,7 +13,9 @@ struct ContextViewModifier: ViewModifier {
         content
             .environment(\.prefrenceContext, context)
             .onPreferenceChange(OffsetPreferenceKey.self) { value in
+                let anchors = context?.anchors
                context = value
+                context?.anchors = anchors ?? []
             }.onPreferenceChange(ReaderPreferenceKey.self) { value in
                 guard let anchor = value else {return}
                 guard let index = context?.anchors.firstIndex(of: anchor) else {
