@@ -8,7 +8,6 @@ import Foundation
 import SwiftUI
 import Introspect
 
-@available(iOS 13.0, *)
 public protocol ScrollViewStyle {
     associatedtype Body: View
 //    associatedtype Content: View
@@ -16,7 +15,6 @@ public protocol ScrollViewStyle {
     func makeUIScrollView(_ scrollView: UIScrollView)
 }
 
-@available(iOS 13.0, *)
 internal extension ScrollViewStyle {
     @ViewBuilder @MainActor func makeBody(context: Context, @ViewBuilder content: @escaping () -> some View) -> some View {
         body(content: AnyView(content()), context: context)
