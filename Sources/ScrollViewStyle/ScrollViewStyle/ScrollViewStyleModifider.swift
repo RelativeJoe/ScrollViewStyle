@@ -9,11 +9,11 @@ import SwiftUI
 import Introspect
 import STools
 
-struct ScrollViewStyleModifider<Style: ScrollViewStyle>: ViewModifier {
-    @StateObject var coordinator = ScrollViewCoordinator()
-    @State var context = Context(offset: 0)
-    let style: Style
-    func body(content: Content) -> some View {
+innternal struct ScrollViewStyleModifider<Style: ScrollViewStyle>: ViewModifier {
+    @StateObject innternal var coordinator = ScrollViewCoordinator()
+    @State innternal var context = Context(offset: 0)
+    innternal let style: Style
+    innternal func body(content: Content) -> some View {
         style.makeBody(context: context) {
             GeometryReader { proxy in
                 content
