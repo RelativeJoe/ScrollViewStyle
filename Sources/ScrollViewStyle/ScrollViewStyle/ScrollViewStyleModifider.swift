@@ -13,6 +13,10 @@ internal struct ScrollViewStyleModifider<Style: ScrollViewStyle>: ViewModifier {
     @StateObject internal var coordinator = ScrollViewCoordinator()
     @State internal var context = Context(offset: 0)
     internal let style: Style
+    internal init(style: Style) {
+        self.style = style
+        self._coordinator = StateObject(wrappedValue: style.makeCoordinator())
+    }
     internal func body(content: Content) -> some View {
         style.makeBody(context: context) {
             GeometryReader { proxy in
