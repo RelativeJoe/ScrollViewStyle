@@ -22,7 +22,7 @@ internal struct ScrollViewStyleModifider<Style: ScrollViewStyle>: ViewModifier {
             GeometryReader { proxy in
                 content
                     .introspectScrollView { scrollView in
-                        style.makeUIScrollView(scrollView)
+                        style.make(uiScrollView: scrollView)
                         scrollView.delegate = coordinator
                     }.change(of: proxy) { newValue in
                         context.proxy = newValue

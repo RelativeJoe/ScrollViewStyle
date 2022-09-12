@@ -8,57 +8,73 @@
 import SwiftUI
 import STools
 
-struct OffsetViewModifier: ViewModifier {
-    let offset: OffsetType
-    let oldHeight: CGFloat?
-    @State var newHeight: CGFloat = 0
-    @State var padding: (Edge.Set, CGFloat) = (.top, 0)
-    @Environment(\.prefrenceContext) var context
-    init(offset: OffsetType, oldHeight: CGFloat?) {
-        self.offset = offset
+internal struct OffsetViewModifier: ViewModifier {
+    private let offsets: [OffsetType]
+    private let oldHeight: CGFloat?
+    private let oldWidth: CGFloat?
+    private let alignment: Alignment?
+    @State private var newHeight: CGFloat?
+    @State private var newWidth: CGFloat?
+    @State private var padding: (Edge.Set, CGFloat) = (.top, 0)
+    @Environment(\.prefrenceContext) private var context
+    internal init(offsets: [OffsetType], oldHeight: CGFloat?, oldWidth: CGFloat?, alignment: Alignment?) {
+        self.offsets = offsets
         self.oldHeight = oldHeight
-        self._newHeight = State(wrappedValue: oldHeight ?? 0)
+        self.oldWidth = oldWidth
+        self.alignment = alignment
+        self._newHeight = State(wrappedValue: oldHeight)
+        self._newWidth = State(wrappedValue: oldWidth)
     }
-    func body(content: Content) -> some View {
+    internal func body(content: Content) -> some View {
         content
             .onChange(of: context) { value in
                 guard let context = value else {
                     return
                 }
-                switch offset {
-                    case .padding(let edge, let maxValue, let speed):
-                        padding.0 = edge
-                        let newPadding = context.offset * (speed ?? 100)/100
-                        if let maxValue {
-                            guard newPadding < maxValue else {return}
-                        }
-                        padding.1 = newPadding
-                    case .resize(let height, let speed, let minOffset, let minHeight):
-                        guard let oldHeight else {return}
-                        if let minHeight {
-                            guard newHeight > minHeight else {return}
-                        }
-                        if let minOffset {
-                            guard context.offset > minOffset else {return}
-                        }
-                        let negativeToAssign = oldHeight - context.offset * (speed ?? 100)/100
-                        let positiveToAssign = oldHeight + context.offset * (speed ?? 100)/100
-                        if negativeToAssign > height  {
-                            newHeight = negativeToAssign
-                        }else if positiveToAssign < height {
-                            newHeight = positiveToAssign
-                        }
+                offsets.forEach { offset in
+                    switch offset {
+                        case .padding(let edge, let maxValue, let speed):
+                            padding.0 = edge
+                            let newPadding = context.offset * (speed ?? 100)/100
+                            if let maxValue {
+                                guard newPadding < maxValue else {return}
+                            }
+                            padding.1 = newPadding
+                        case .heightResize(let height, let speed, let minOffset, let minHeight):
+                            guard let oldHeight else {return}
+                            if let minHeight {
+                                guard newHeight ?? 0 > minHeight else {return}
+                            }
+                            if let minOffset {
+                                guard context.offset > minOffset else {return}
+                            }
+                            let negativeToAssign = oldHeight - context.offset * (speed ?? 100)/100
+                            let positiveToAssign = oldHeight + context.offset * (speed ?? 100)/100
+                            if negativeToAssign > height  {
+                                newHeight = negativeToAssign
+                            }else if positiveToAssign < height {
+                                newHeight = positiveToAssign
+                            }
+                        case .widthResize(let width, let speed, let minOffset, let minWidth):
+                            guard let oldWidth else {return}
+                            if let minWidth {
+                                guard newWidth ?? 0 > minWidth else {return}
+                            }
+                            if let minOffset {
+                                guard context.offset > minOffset else {return}
+                            }
+                            let negativeToAssign = oldWidth - context.offset * (speed ?? 100)/100
+                            let positiveToAssign = oldWidth + context.offset * (speed ?? 100)/100
+                            if negativeToAssign > width  {
+                                newWidth = negativeToAssign
+                            }else if positiveToAssign < width {
+                                newWidth = positiveToAssign
+                            }
+                    }
                 }
             }.stateModifier(oldHeight != nil) { view in
                 view
-                    .frame(height: newHeight)
+                    .frame(width: newWidth, height: newHeight, alignment: alignment ?? .center)
             }.padding(padding.0, padding.1)
-    }
-}
-
-public extension View {
-    @ViewBuilder func onScroll(offset: OffsetType, height: CGFloat? = nil) -> some View {
-        self
-            .modifier(OffsetViewModifier(offset: offset, oldHeight: height))
     }
 }
