@@ -16,4 +16,7 @@ public struct ComplexScrollViewStyle: ScrollViewStyle {
     }
     public init() {
     }
+    public func makeCoordinator() -> some Delegate {
+        return ScrollViewCoordinator()
+    }
 }

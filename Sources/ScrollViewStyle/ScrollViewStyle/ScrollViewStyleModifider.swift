@@ -10,7 +10,7 @@ import Introspect
 import STools
 
 internal struct ScrollViewStyleModifider<Style: ScrollViewStyle>: ViewModifier {
-    @StateObject internal var coordinator = ScrollViewCoordinator()
+    @StateObject internal var coordinator: Style.ScrollDelegate
     @State internal var context = Context(offset: 0)
     internal let style: Style
     internal init(style: Style) {
