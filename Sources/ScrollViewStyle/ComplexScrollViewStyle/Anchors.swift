@@ -18,14 +18,14 @@ struct AnchorViewModifier: ViewModifier {
     @State var geometryReader: GeometryProxy?
     let id: String
     func body(content: Content) -> some View {
-        self
-            .background {
+        content
+            .background(
                 GeometryReader { reader in
                     Color.clear
                         .onChange(of: reader) { reader in
                             geometryReader = reader
                         }
                 }
-            }.preference(key: ReaderPreferenceKey.self, value: ReaderAnchor(anchor: id, reader: geometryReader))
+            ).preference(key: ReaderPreferenceKey.self, value: ReaderAnchor(anchor: id, reader: geometryReader))
     }
 }
