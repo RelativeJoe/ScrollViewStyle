@@ -33,38 +33,40 @@ internal struct OffsetViewModifier: ViewModifier {
                 }
                 offsets.forEach { offset in
                     switch offset {
-                        case .padding(let edge, let maxValue, let speed):
+                        case .padding(let edge, let maxValue, let speed, let vertical):
                             padding.0 = edge
-                            let newPadding = context.offset * (speed ?? 100)/100
+                            let newPadding = context.offset.getValue(vertical) * (speed ?? 100)/100
                             if let maxValue {
                                 guard newPadding < maxValue else {return}
                             }
                             padding.1 = newPadding
-                        case .heightResize(let height, let speed, let minOffset, let minHeight):
+                        case .heightResize(let height, let speed, let minOffset, let minHeight, let vertical):
                             guard let oldHeight else {return}
+                            let value = context.offset.getValue(vertical)
                             if let minHeight {
                                 guard newHeight ?? 0 > minHeight else {return}
                             }
                             if let minOffset {
-                                guard context.offset > minOffset else {return}
+                                guard context.offset.getValue(vertical) > minOffset else {return}
                             }
-                            let negativeToAssign = oldHeight - context.offset * (speed ?? 100)/100
-                            let positiveToAssign = oldHeight + context.offset * (speed ?? 100)/100
+                            let negativeToAssign = oldHeight - value * (speed ?? 100)/100
+                            let positiveToAssign = oldHeight + value * (speed ?? 100)/100
                             if negativeToAssign > height  {
                                 newHeight = negativeToAssign
                             }else if positiveToAssign < height {
                                 newHeight = positiveToAssign
                             }
-                        case .widthResize(let width, let speed, let minOffset, let minWidth):
+                        case .widthResize(let width, let speed, let minOffset, let minWidth, let vertical):
                             guard let oldWidth else {return}
+                            let value = context.offset.getValue(vertical)
                             if let minWidth {
                                 guard newWidth ?? 0 > minWidth else {return}
                             }
                             if let minOffset {
-                                guard context.offset > minOffset else {return}
+                                guard value > minOffset else {return}
                             }
-                            let negativeToAssign = oldWidth - context.offset * (speed ?? 100)/100
-                            let positiveToAssign = oldWidth + context.offset * (speed ?? 100)/100
+                            let negativeToAssign = oldWidth - value * (speed ?? 100)/100
+                            let positiveToAssign = oldWidth + value * (speed ?? 100)/100
                             if negativeToAssign > width  {
                                 newWidth = negativeToAssign
                             }else if positiveToAssign < width {
@@ -78,3 +80,13 @@ internal struct OffsetViewModifier: ViewModifier {
             }.padding(padding.0, padding.1)
     }
 }
+
+extension CGPoint {
+    func getValue(_ vertical: Bool) -> CGFloat {
+        if vertical {
+            return y
+        }
+        return x
+    }
+}
+

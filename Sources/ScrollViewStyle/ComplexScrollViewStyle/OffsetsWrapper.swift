@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import STools
 
 public struct OffsetsWrapper<Content: View>: View {
     @State var offsets = [OffsetType]()

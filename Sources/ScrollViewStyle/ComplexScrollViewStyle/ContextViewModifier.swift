@@ -9,20 +9,21 @@ import SwiftUI
 
 struct ContextViewModifier: ViewModifier {
     @State var context: Context?
+    @State var anchors = [ReaderAnchor]()
     func body(content: Content) -> some View {
         content
             .environment(\.prefrenceContext, context)
             .onPreferenceChange(OffsetPreferenceKey.self) { value in
                 var valuey = value
-                valuey?.anchors = context?.anchors ?? []
+                valuey?.anchors = anchors
                 context = valuey
             }.onPreferenceChange(ReaderPreferenceKey.self) { value in
                 guard let anchor = value else {return}
-                guard let index = context?.anchors.firstIndex(of: anchor) else {
-                    context?.anchors.append(anchor)
+                guard let index = anchors.firstIndex(of: anchor) else {
+                    anchors.append(anchor)
                     return
                 }
-                context?.anchors[index] = anchor
+                anchors[index] = anchor
             }
     }
 }

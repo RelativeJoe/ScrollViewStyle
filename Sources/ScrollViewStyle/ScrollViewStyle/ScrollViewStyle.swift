@@ -10,10 +10,10 @@ import Introspect
 
 public protocol ScrollViewStyle {
     associatedtype Body: View
-    associatedtype ScrollDelegate: Delegate
+    associatedtype ScrollContainer: Delegate
     @ViewBuilder @MainActor func make(body: AnyView, context: Context) -> Self.Body
     func make(uiScrollView: UIScrollView)
-    func makeCoordinator() -> ScrollDelegate
+    func makeCoordinator() -> Self.ScrollContainer
 }
 
 internal extension ScrollViewStyle {
