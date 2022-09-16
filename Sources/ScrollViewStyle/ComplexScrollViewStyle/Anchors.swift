@@ -9,9 +9,23 @@ import SwiftUI
 
 public extension View {
     @ViewBuilder func anchor<T: CustomStringConvertible>(id: T) -> some View {
-        GeometryReader { reader in
-            self
-                .preference(key: ReaderPreferenceKey.self, value: ReaderAnchor(anchor: id.description, reader: reader))
-        }
+        self
+            .modifier(AnchorViewModifier(id: id.description))
+    }
+}
+
+struct AnchorViewModifier: ViewModifier {
+    @State var geometryReader: GeometryProxy?
+    let id: String
+    func body(content: Content) -> some View {
+        self
+            .background {
+                GeometryReader { reader in
+                    Color.clear
+                        .onChange(of: reader) { reader in
+                            geometryReader = reader
+                        }
+                }
+            }.preference(key: ReaderPreferenceKey.self, value: ReaderAnchor(anchor: id, reader: geometryReader))
     }
 }
