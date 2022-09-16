@@ -8,7 +8,7 @@
 import STools
 import SwiftUI
 
-public struct Resize {
+public struct Resize: ScrollOffset {
     internal var size: SizeChange
     internal var value: CGFloat
     internal var speed: CGFloat?
@@ -17,7 +17,7 @@ public struct Resize {
     internal var direction: ScrollDirection
     internal var anchor: String?
     internal var point: CGPoint?
-    internal var type: OffsetType {
+    public var type: OffsetType {
         switch size {
             case .height:
                 return .heightResize(height: value, speed: speed, minOffset: minOffset, minHeight: minValue, vertical: direction == .top || direction == .bottom, anchor: anchor, point: point)
@@ -67,4 +67,8 @@ public extension Resize {
     func relative(to anchor: CustomStringConvertible, startPoint: CGPoint) -> Resize {
         return Resize(size: size, value: value, speed: speed, minOffset: minOffset, minHeight: minValue, direction: direction, anchor: anchor.description, point: startPoint)
     }
+}
+
+public protocol ScrollOffset {
+    var type: OffsetType {get}
 }
