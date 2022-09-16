@@ -29,9 +29,14 @@ public struct OffsetsWrapper<Content: View>: View {
         offsetsy.append(offset)
         return OffsetsWrapper(offsets: offsetsy, content: content, width: width, height: height, alignment: alignment)
     }
-    public func onScroll<Offset: ScrollOffset>(offset: Offset) -> OffsetsWrapper {
+    public func onScroll<Offset: ScrollOffset>(_ offset: Offset) -> OffsetsWrapper {
         var offsetsy = offsets
         offsetsy.append(offset.type)
+        return OffsetsWrapper(offsets: offsetsy, content: content, width: width, height: height, alignment: alignment)
+    }
+    public func onScroll<Offset: ScrollOffset>(_ offset: @escaping () -> Offset) -> OffsetsWrapper {
+        var offsetsy = offsets
+        offsetsy.append(offset().type)
         return OffsetsWrapper(offsets: offsetsy, content: content, width: width, height: height, alignment: alignment)
     }
 }
