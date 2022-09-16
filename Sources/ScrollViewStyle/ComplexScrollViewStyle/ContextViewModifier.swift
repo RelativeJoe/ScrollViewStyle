@@ -7,10 +7,10 @@
 
 import SwiftUI
 
-struct ContextViewModifier: ViewModifier {
-    @State var context: Context?
-    @State var anchors = [ReaderAnchor]()
-    func body(content: Content) -> some View {
+internal struct ContextViewModifier: ViewModifier {
+    @State internal var context: Context?
+    @State internal var anchors = [ReaderAnchor]()
+    internal func body(content: Content) -> some View {
         content
             .environment(\.prefrenceContext, context)
             .onPreferenceChange(OffsetPreferenceKey.self) { value in

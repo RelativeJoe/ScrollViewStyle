@@ -80,13 +80,3 @@ internal struct OffsetViewModifier: ViewModifier {
             }.padding(padding.0, padding.1)
     }
 }
-
-extension CGPoint {
-    func getValue(_ vertical: Bool) -> CGFloat {
-        if vertical {
-            return y
-        }
-        return x
-    }
-}
-

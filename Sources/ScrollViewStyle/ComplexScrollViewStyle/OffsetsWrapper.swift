@@ -9,17 +9,11 @@ import SwiftUI
 import STools
 
 public struct OffsetsWrapper<Content: View>: View {
-    @State var offsets = [OffsetType]()
-    var content: Content
-    @State  var width: CGFloat?
-    @State var height: CGFloat?
-    var alignment: Alignment?
-//    internal init(content: Content, width: CGFloat? = nil, height: CGFloat? = nil, alignment: Alignment? = nil) {
-//        self.content = content
-//        self._width = State(wrappedValue: width)
-//        self._height = State(wrappedValue: height)
-//        self.alignment = alignment
-//    }
+    @State internal var offsets = [OffsetType]()
+    internal var content: Content
+    @State internal var width: CGFloat?
+    @State internal var height: CGFloat?
+    internal var alignment: Alignment?
     public var body: some View {
         content
             .onChange(of: .height) { heighty in

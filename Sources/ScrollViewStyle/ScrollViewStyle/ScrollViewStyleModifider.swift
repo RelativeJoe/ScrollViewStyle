@@ -21,6 +21,7 @@ internal struct ScrollViewStyleModifider<Style: ScrollViewStyle>: ViewModifier {
         style.makeBody(context: context) {
             GeometryReader { proxy in
                 content
+                    .coordinateSpace(name: "ScrollView")
                     .introspectScrollView { scrollView in
                         style.make(uiScrollView: scrollView)
                         scrollView.delegate = coordinator
@@ -34,7 +35,7 @@ internal struct ScrollViewStyleModifider<Style: ScrollViewStyle>: ViewModifier {
     }
 }
 
-public extension ScrollView {
+public extension View {
     @ViewBuilder func scrollViewStyle<Style: ScrollViewStyle>(_ style: Style) -> some View {
         self.modifier(ScrollViewStyleModifider(style: style))
     }

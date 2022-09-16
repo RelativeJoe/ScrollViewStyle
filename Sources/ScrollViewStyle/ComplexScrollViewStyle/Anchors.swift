@@ -7,25 +7,25 @@
 
 import SwiftUI
 
-public extension View {
-    @ViewBuilder func anchor<T: CustomStringConvertible>(id: T) -> some View {
-        self
-            .modifier(AnchorViewModifier(id: id.description))
-    }
-}
-
-struct AnchorViewModifier: ViewModifier {
-    @State var geometryReader: GeometryProxy?
-    let id: String
-    func body(content: Content) -> some View {
+internal struct AnchorViewModifier: ViewModifier {
+    @State internal var geometryReader: GeometryProxy?
+    internal let id: String
+    internal func body(content: Content) -> some View {
         content
             .background(
                 GeometryReader { reader in
                     Color.clear
-                        .onChange(of: reader) { reader in
+                        .onChange(of: reader.frame(in: .scrollView).minX) { _ in
                             geometryReader = reader
                         }
                 }
             ).preference(key: ReaderPreferenceKey.self, value: ReaderAnchor(anchor: id, reader: geometryReader))
+    }
+}
+
+public extension View {
+    @ViewBuilder func anchor<T: CustomStringConvertible>(id: T) -> some View {
+        self
+            .modifier(AnchorViewModifier(id: id.description))
     }
 }
