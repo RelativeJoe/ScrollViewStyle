@@ -24,7 +24,7 @@ internal struct AnchorViewModifier: ViewModifier {
 }
 
 public extension View {
-    @ViewBuilder func anchor<T: CustomStringConvertible>(id: T) -> some View {
+    @ViewBuilder func anchor(id: CustomStringConvertible) -> some View {
         self
             .modifier(AnchorViewModifier(id: id.description))
     }

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import STools
 
 public enum ScrollDirection: RawRepresentable, OptionSet {
     case top, bottom, leading, trailing
@@ -41,8 +42,12 @@ public enum Dragging {
     case initiated, iddle, userEnded
 }
 
+enum PointPosition {
+    case min, mid, max
+}
+
 public enum OffsetType {
     case padding(edge: Edge.Set, maxValue: CGFloat? = nil, speed: CGFloat? = nil, vertical: Bool = true)
-    case heightResize(height: CGFloat, speed: CGFloat? = nil, minOffset: CGFloat? = nil, minHeight: CGFloat? = nil, vertical: Bool = true)
+    case heightResize(height: CGFloat, speed: CGFloat? = nil, minOffset: CGFloat? = nil, minHeight: CGFloat? = nil, vertical: Bool = true, anchor: String? = nil, point: CGPoint?)
     case widthResize(width: CGFloat, speed: CGFloat? = nil, minOffset: CGFloat? = nil, minWidth: CGFloat? = nil, vertical: Bool = true)
 }

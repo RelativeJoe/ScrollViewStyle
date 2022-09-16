@@ -40,7 +40,7 @@ internal struct OffsetViewModifier: ViewModifier {
                                 guard newPadding < maxValue else {return}
                             }
                             padding.1 = newPadding
-                        case .heightResize(let height, let speed, let minOffset, let minHeight, let vertical):
+                        case .heightResize(let height, let speed, let minOffset, let minHeight, let vertical, let anchor, let point):
                             guard let oldHeight else {return}
                             let value = context.offset.getValue(vertical)
                             if let minHeight {
@@ -51,10 +51,21 @@ internal struct OffsetViewModifier: ViewModifier {
                             }
                             let negativeToAssign = oldHeight - value * (speed ?? 100)/100
                             let positiveToAssign = oldHeight + value * (speed ?? 100)/100
-                            if negativeToAssign > height  {
-                                newHeight = negativeToAssign
-                            }else if positiveToAssign < height {
-                                newHeight = positiveToAssign
+                            if let anchorView = context.anchors.first(where: {$0.anchor == anchor}), let point {
+                                let minY = anchorView.reader?.frame(in: .scrollView).maxY ?? 0
+                                if minY < point.y + height && minY > point.y {
+                                    newHeight = height - minY
+                                }else {
+                                    if minY > point.y {
+                                        newHeight = 0
+                                    }
+                                }
+                            }else {
+                                if negativeToAssign > height  {
+                                    newHeight = negativeToAssign
+                                }else if positiveToAssign < height {
+                                    newHeight = positiveToAssign
+                                }
                             }
                         case .widthResize(let width, let speed, let minOffset, let minWidth, let vertical):
                             guard let oldWidth else {return}
