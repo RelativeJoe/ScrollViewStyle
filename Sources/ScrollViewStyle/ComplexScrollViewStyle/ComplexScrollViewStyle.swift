@@ -24,7 +24,10 @@ public struct ComplexScrollViewStyle: ScrollViewStyle {
 
 public struct ScrollViewContainer<Content: View>: View {
     @State internal var context: Context? = Context(offset: .zero)
-    @ViewBuilder public var content: (Binding<Context?>) -> Content
+    internal var content: (Binding<Context?>) -> Content
+    public init(@ViewBuilder content: @escaping (Binding<Context?>) -> Content) {
+        self.content = content
+    }
     public var body: some View {
         content($context)
     }
