@@ -56,6 +56,7 @@ internal struct OffsetViewModifier: ViewModifier {
                             if let anchor {
                                 guard let anchorView = context.anchors.first(where: {$0.anchor == anchor}), let point else {return}
                                 let y = anchorView.reader?.frame(in: .scrollView).maxY ?? 0
+                                print(y)
                                 if y < 0 {
                                     newHeight = height
                                 }else if y > point.y + height {
