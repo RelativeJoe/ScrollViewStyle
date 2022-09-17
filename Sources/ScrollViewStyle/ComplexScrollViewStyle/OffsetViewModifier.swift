@@ -55,14 +55,21 @@ internal struct OffsetViewModifier: ViewModifier {
                             let positiveToAssign = oldHeight + value * (speed ?? 100)/100
                             if let anchor {
                                 guard let anchorView = context.anchors.first(where: {$0.anchor == anchor}), let point else {return}
-                                let minY = anchorView.reader?.frame(in: .scrollView).maxY ?? 0
-                                if minY < point.y + height && minY > point.y {
-                                    newHeight = height - minY
-                                }else {
-                                    if minY > point.y {
-                                        newHeight = 0
-                                    }
+                                let y = anchorView.reader?.frame(in: .scrollView).maxY ?? 0
+                                if y < 0 {
+                                    newHeight = height
+                                }else if y > point.y + height {
+                                    newHeight = 0
+                                }else if y < point.y + height {
+                                    newHeight = height - y
                                 }
+//                                if y < point.y + height && y > point.y {
+//                                    newHeight = height - y
+//                                }else {
+//                                    if y > point.y {
+//                                        newHeight = 0
+//                                    }
+//                                }
                             }else {
                                 if negativeToAssign > height  {
                                     newHeight = negativeToAssign
