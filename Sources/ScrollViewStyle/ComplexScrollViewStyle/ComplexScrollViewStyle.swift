@@ -13,6 +13,7 @@ public struct ComplexScrollViewStyle: ScrollViewStyle {
     public func make(body: AnyView, context: Context) -> some View {
         body
             .preference(key: OffsetPreferenceKey.self, value: context)
+            .environment(\.prefrenceContext, context)
     }
     public init() {
     }
