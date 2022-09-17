@@ -13,16 +13,20 @@ public struct OffsetsWrapper<Content: View>: View {
     internal var content: Content
     @State internal var width: CGFloat?
     @State internal var height: CGFloat?
+    @State private var newHeightSet = false
+    @State private var newWidthSet = false
     @Binding internal var context: Context?
     internal var alignment: Alignment?
     public var body: some View {
         content
             .onChange(of: .height) { heighty in
-                guard height == nil, height == 0 else {return}
+                guard height == nil, !newHeightSet else {return}
                 height = heighty
+                newHeightSet = true
             }.onChange(of: .width) { widthy in
-                guard height == nil, width == 0 else {return}
+                guard width == nil, !newWidthSet else {return}
                 width = widthy
+                newWidthSet = true
             }.modifier(OffsetViewModifier(offsets: offsets, oldHeight: height, oldWidth: width, alignment: alignment, context: $context))
     }
     public func onScroll(offset: OffsetType) -> OffsetsWrapper {
