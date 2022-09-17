@@ -17,18 +17,7 @@ public struct ComplexScrollViewStyle: ScrollViewStyle {
     }
     public init() {
     }
-    public func makeCoordinator() -> some Delegate {
+    public func makeCoordinator() -> some ScrollViewDelegate {
         return ScrollViewCoordinator()
-    }
-}
-
-public struct ScrollViewContainer<Content: View>: View {
-    @State internal var context: Context? = Context(offset: .zero)
-    internal var content: (Binding<Context?>) -> Content
-    public init(@ViewBuilder content: @escaping (Binding<Context?>) -> Content) {
-        self.content = content
-    }
-    public var body: some View {
-        content($context)
     }
 }

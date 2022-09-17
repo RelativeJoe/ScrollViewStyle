@@ -7,9 +7,9 @@
 
 import SwiftUI
 
-open class ScrollViewCoordinator: NSObject, Delegate {
+open class ScrollViewCoordinator: NSObject, ScrollViewDelegate {
     @Published public var offset = CGPoint.zero
-    @Published public var isDragging = Dragging.iddle
+    @Published public var state = Dragging.iddle
     @Published public var direction: ScrollDirection?
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
         var temporaryDirection = [ScrollDirection]()
@@ -36,17 +36,13 @@ open class ScrollViewCoordinator: NSObject, Delegate {
         self.offset = scrollView.contentOffset
     }
     public func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-        isDragging = .initiated
+        state = .initiated
     }
     public func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
-        isDragging = .userEnded
+        state = .userEnded
     }
     public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-        isDragging = .iddle
+        state = .iddle
     }
 }
 
-public protocol Delegate: AnyObject, ObservableObject, UIScrollViewDelegate {
-    var offset: CGPoint {get set}
-    func scrollViewDidScroll(_ scrollView: UIScrollView)
-}

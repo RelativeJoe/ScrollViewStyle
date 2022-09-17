@@ -51,6 +51,7 @@ internal struct ScrollViewStyleModifider<Style: ScrollViewStyle>: ViewModifier {
     }
 }
 
+//MARK: - Public Modifier
 public extension View {
     @ViewBuilder func scrollViewStyle<Style: ScrollViewStyle>(_ style: Style, context: Binding<Context?> = .constant(nil)) -> some View {
         self

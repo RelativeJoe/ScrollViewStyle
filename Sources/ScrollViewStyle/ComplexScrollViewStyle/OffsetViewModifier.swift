@@ -8,7 +8,8 @@
 import SwiftUI
 import STools
 
-internal struct OffsetViewModifier: ViewModifier {
+internal struct OffsetViewModifier {
+    //MARK: - Properties
     private let offsets: [OffsetType]
     private let oldHeight: CGFloat?
     private let oldWidth: CGFloat?
@@ -17,8 +18,12 @@ internal struct OffsetViewModifier: ViewModifier {
     @State private var newWidth: CGFloat?
     @State private var padding: (Edge.Set, CGFloat) = (.top, 0)
     @Binding internal var context: Context?
-//    @Environment(\.prefrenceContext) private var context
-    internal init(offsets: [OffsetType], oldHeight: CGFloat?, oldWidth: CGFloat?, alignment: Alignment?, context: Binding<Context?>) {
+    //    @Environment(\.prefrenceContext) private var context
+}
+
+//MARK: - Internal Initializer
+internal extension OffsetViewModifier {
+    init(_ offsets: [OffsetType], oldHeight: CGFloat?, oldWidth: CGFloat?, alignment: Alignment?, context: Binding<Context?>) {
         self.offsets = offsets
         self.oldHeight = oldHeight
         self.oldWidth = oldWidth
@@ -27,6 +32,21 @@ internal struct OffsetViewModifier: ViewModifier {
         self._newWidth = State(wrappedValue: oldWidth)
         self._context = context
     }
+}
+
+//MARK: - Internal Functions
+internal extension OffsetViewModifier {
+    func setNewValue(_ value: CGFloat?, size: SizeChange) {
+        if size == .height {
+            newHeight = value
+        }else {
+            newWidth = value
+        }
+    }
+}
+
+//MARK: - ViewModifier
+extension OffsetViewModifier: ViewModifier {
     internal func body(content: Content) -> some View {
         content
             .onChange(of: context) { value in
@@ -35,64 +55,60 @@ internal struct OffsetViewModifier: ViewModifier {
                 }
                 offsets.forEach { offset in
                     switch offset {
-                        case .padding(let edge, let maxValue, let speed, let vertical):
-                            padding.0 = edge
-                            let newPadding = context.offset.getValue(vertical) * (speed ?? 100)/100
-                            if let maxValue {
+                        case .padding(let paddingValue):
+                            //MARK: - Padding Values
+                            let newPadding = context.offset.getValue(paddingValue.axis ?? .vertical) * (paddingValue.speed ?? 100)/100
+                            //MARK: - Padding Conditions
+                            if let minValue = paddingValue.minValue {
+                                guard padding.1 > minValue else {return}
+                            }
+                            if let direction = paddingValue.direction {
+                                guard context.direction == direction else {return}
+                            }
+                            if let minOffset = paddingValue.minOffset {
+                                guard newPadding > minOffset else {return}
+                            }
+                            if let maxValue = paddingValue.maxValue {
                                 guard newPadding < maxValue else {return}
                             }
+                            //MARK: - Padding Logic
+                            padding.0 = paddingValue.edge
                             padding.1 = newPadding
-                        case .heightResize(let height, let speed, let minOffset, let minHeight, let vertical, let anchor, let point):
+                        case .resize(let resize):
+                            //MARK: - Resize Values
+                            let defaultAxis = resize.size == .height ? ScrollAxis.vertical: .horizontal
+                            let newValue = resize.size == .height ? newHeight: newWidth
+                            let value = context.offset.getValue(resize.axis ?? defaultAxis) * (resize.speed ?? 100)/100
+                            //MARK: - Resize Conditions
                             guard let oldHeight else {return}
-                            let value = context.offset.getValue(vertical)
-                            if let minHeight {
-                                guard newHeight ?? 0 > minHeight else {return}
+                            if let direction = resize.direction {
+                                guard context.direction == direction else {return}
                             }
-                            if let minOffset {
-                                guard context.offset.getValue(vertical) > minOffset else {return}
+                            if let minValue = resize.minValue {
+                                guard newValue ?? 0 > minValue else {return}
                             }
-                            let negativeToAssign = oldHeight - value * (speed ?? 100)/100
-                            let positiveToAssign = oldHeight + value * (speed ?? 100)/100
-                            if let anchor {
-                                guard let anchorView = context.anchors.first(where: {$0.anchor == anchor}), let point else {return}
-                                let y = anchorView.reader?.frame(in: .scrollView).maxY ?? 0
-                                print(y)
-                                if y < 0 {
-                                    newHeight = height
-                                }else if y > point.y + height {
-                                    newHeight = 0
-                                }else if y < point.y + height {
-                                    newHeight = height - y
-                                }
-//                                if y < point.y + height && y > point.y {
-//                                    newHeight = height - y
-//                                }else {
-//                                    if y > point.y {
-//                                        newHeight = 0
-//                                    }
-//                                }
-                            }else {
-                                if negativeToAssign > height  {
-                                    newHeight = negativeToAssign
-                                }else if positiveToAssign < height {
-                                    newHeight = positiveToAssign
-                                }
-                            }
-                        case .widthResize(let width, let speed, let minOffset, let minWidth, let vertical):
-                            guard let oldWidth else {return}
-                            let value = context.offset.getValue(vertical)
-                            if let minWidth {
-                                guard newWidth ?? 0 > minWidth else {return}
-                            }
-                            if let minOffset {
+                            if let minOffset = resize.minOffset {
                                 guard value > minOffset else {return}
                             }
-                            let negativeToAssign = oldWidth - value * (speed ?? 100)/100
-                            let positiveToAssign = oldWidth + value * (speed ?? 100)/100
-                            if negativeToAssign > width  {
-                                newWidth = negativeToAssign
-                            }else if positiveToAssign < width {
-                                newWidth = positiveToAssign
+                            //MARK: - Resize Logic
+                            let negativeToAssign = oldHeight - value
+                            let positiveToAssign = oldHeight + value
+                            if let anchor = resize.anchor {
+                                guard let anchorView = context.anchors.first(where: {$0.anchor == anchor}), let point = resize.point, let pointPosition = anchorView.reader?.frame(in: .scrollView).getValue(resize.position ?? .max, axis: resize.axis ?? defaultAxis) else {return}
+                                let target = point.getValue(resize.axis ?? defaultAxis)
+                                if pointPosition < 0 {
+                                    setNewValue(resize.value, size: resize.size)
+                                }else if pointPosition > target + resize.value {
+                                    setNewValue(0, size: resize.size)
+                                }else if pointPosition < target + resize.value {
+                                    setNewValue(resize.value - pointPosition, size: resize.size)
+                                }
+                            }else {
+                                if negativeToAssign > resize.value  {
+                                    setNewValue(negativeToAssign, size: resize.size)
+                                }else if positiveToAssign < resize.value {
+                                    setNewValue(positiveToAssign, size: resize.size)
+                                }
                             }
                     }
                 }

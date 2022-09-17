@@ -7,10 +7,14 @@
 
 import SwiftUI
 
-public struct ReaderAnchor: Equatable {
+public struct ReaderAnchor {
+    public var anchor: String
+    public var reader: GeometryProxy?
+}
+
+//MARK: - Equatable
+extension ReaderAnchor: Equatable {
     public static func == (lhs: ReaderAnchor, rhs: ReaderAnchor) -> Bool {
         return lhs.anchor == rhs.anchor
     }
-    public var anchor: String
-    public var reader: GeometryProxy?
 }
