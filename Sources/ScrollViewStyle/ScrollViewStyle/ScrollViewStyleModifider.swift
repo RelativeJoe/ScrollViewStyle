@@ -22,7 +22,6 @@ internal struct ScrollViewStyleModifider<Style: ScrollViewStyle>: ViewModifier {
     internal func body(content: Content) -> some View {
         style.makeBody(context: context) {
             content
-                .coordinateSpace(name: "ScrollView")
                 .introspectScrollView { scrollView in
                     style.make(uiScrollView: scrollView)
                     scrollView.delegate = coordinator
@@ -54,6 +53,8 @@ internal struct ScrollViewStyleModifider<Style: ScrollViewStyle>: ViewModifier {
 
 public extension View {
     @ViewBuilder func scrollViewStyle<Style: ScrollViewStyle>(_ style: Style, context: Binding<Context?> = .constant(nil)) -> some View {
-        self.modifier(ScrollViewStyleModifider(style: style, context: context))
+        self
+            .coordinateSpace(name: "ScrollView")
+            .modifier(ScrollViewStyleModifider(style: style, context: context))
     }
 }
