@@ -9,7 +9,7 @@ import SwiftUI
 
 internal struct AnchorViewModifier: ViewModifier {
     @Binding var context: Context?
-    @State internal var geometryReader: GeometryProxy?
+//    @State internal var geometryReader: GeometryProxy?
     internal let id: String
     internal func body(content: Content) -> some View {
         content
@@ -17,10 +17,15 @@ internal struct AnchorViewModifier: ViewModifier {
                 GeometryReader { reader in
                     Color.clear
                         .onChange(of: reader.frame(in: .scrollView).minX) { _ in
-                            geometryReader = reader
+                            let anchor = ReaderAnchor(anchor: id, reader: reader)
+                            guard let index = context?.anchors.firstIndex(of: anchor) else {
+                                context?.anchors.append(anchor)
+                                return
+                            }
+                            context?.anchors[index] = anchor
                         }
                 }
-            ).preference(key: ReaderPreferenceKey.self, value: ReaderAnchor(anchor: id, reader: geometryReader))
+            )//.preference(key: ReaderPreferenceKey.self, value: ReaderAnchor(anchor: id, reader: geometryReader))
     }
 }
 
