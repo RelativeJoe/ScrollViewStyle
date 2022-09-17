@@ -8,7 +8,6 @@
 import Foundation
 import SwiftUI
 
-@available(iOS 14.0, *)
 public struct ComplexScrollViewStyle: ScrollViewStyle {
     public func make(body: AnyView, context: Context) -> some View {
         body

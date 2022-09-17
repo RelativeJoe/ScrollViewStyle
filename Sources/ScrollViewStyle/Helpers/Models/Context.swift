@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-@available(iOS 13.0, *)
 public struct Context: Equatable {
     public var offset: CGPoint
     public var direction: ScrollDirection?
