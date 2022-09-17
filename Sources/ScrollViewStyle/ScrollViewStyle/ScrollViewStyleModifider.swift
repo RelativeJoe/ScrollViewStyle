@@ -29,6 +29,13 @@ internal struct ScrollViewStyleModifider<Style: ScrollViewStyle>: ViewModifier {
                         context.proxy = newValue
                     }.change(of: coordinator.offset) { newValue in
                         context.offset = newValue
+                    }.onPreferenceChange(ReaderPreferenceKey.self) { value in
+                        guard let anchor = value else {return}
+                        guard let index = context.anchors.firstIndex(of: anchor) else {
+                            context.anchors.append(anchor)
+                            return
+                        }
+                        context.anchors[index] = anchor
                     }
             }// as! Style.Content
         }
