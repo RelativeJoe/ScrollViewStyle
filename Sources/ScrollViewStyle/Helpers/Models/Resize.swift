@@ -19,6 +19,7 @@ public struct Resize: ScrollOffset {
     internal var point: CGPoint?
     internal var axis: ScrollAxis?
     internal var position: PointPosition?
+    internal var animation: Animation?
     public var type: OffsetType {
         return .resize(self)
     }
@@ -35,22 +36,25 @@ public extension Resize {
 //MARK: - Public Functions
 public extension Resize {
     func with(speed: CGFloat) -> Resize {
-        return Resize(size: size, value: value, speed: speed, minOffset: minOffset, minValue: minValue, direction: direction, anchor: anchor, point: point, axis: axis, position: position)
+        return Resize(size: size, value: value, speed: speed, minOffset: minOffset, minValue: minValue, direction: direction, anchor: anchor, point: point, axis: axis, position: position, animation: animation)
+    }
+    func with(animation: Animation) -> Resize {
+        return Resize(size: size, value: value, speed: speed, minOffset: minOffset, minValue: minValue, direction: direction, anchor: anchor, point: point, axis: axis, position: position, animation: animation)
     }
     func minimumOffset(_ minOffset: CGFloat) -> Resize {
-        return Resize(size: size, value: value, speed: speed, minOffset: minOffset, minValue: minValue, direction: direction, anchor: anchor, point: point, axis: axis, position: position)
+        return Resize(size: size, value: value, speed: speed, minOffset: minOffset, minValue: minValue, direction: direction, anchor: anchor, point: point, axis: axis, position: position, animation: animation)
     }
     func minimumValue(_ minValue: CGFloat) -> Resize {
-        return Resize(size: size, value: value, speed: speed, minOffset: minOffset, minValue: minValue, direction: direction, anchor: anchor, point: point, axis: axis, position: position)
+        return Resize(size: size, value: value, speed: speed, minOffset: minOffset, minValue: minValue, direction: direction, anchor: anchor, point: point, axis: axis, position: position, animation: animation)
     }
     func on(axis: ScrollAxis) -> Resize {
-        return Resize(size: size, value: value, speed: speed, minOffset: minOffset, minValue: minValue, direction: direction, anchor: anchor, point: point, axis: axis, position: position)
+        return Resize(size: size, value: value, speed: speed, minOffset: minOffset, minValue: minValue, direction: direction, anchor: anchor, point: point, axis: axis, position: position, animation: animation)
     }
     func when(direction: ScrollDirection) -> Resize {
-        return Resize(size: size, value: value, speed: speed, minOffset: minOffset, minValue: minValue, direction: direction, anchor: anchor, point: point, axis: axis, position: position)
+        return Resize(size: size, value: value, speed: speed, minOffset: minOffset, minValue: minValue, direction: direction, anchor: anchor, point: point, axis: axis, position: position, animation: animation)
     }
     func relative(to anchor: CustomStringConvertible, startPoint: CGPoint, at position: PointPosition) -> Resize {
-        return Resize(size: size, value: value, speed: speed, minOffset: minOffset, minValue: minValue, direction: direction, anchor: anchor.description, point: startPoint, axis: axis, position: position)
+        return Resize(size: size, value: value, speed: speed, minOffset: minOffset, minValue: minValue, direction: direction, anchor: anchor.description, point: startPoint, axis: axis, position: position, animation: animation)
     }
 }
 

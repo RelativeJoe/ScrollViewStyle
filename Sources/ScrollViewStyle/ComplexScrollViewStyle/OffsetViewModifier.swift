@@ -50,64 +50,71 @@ extension OffsetViewModifier: ViewModifier {
     internal func body(content: Content) -> some View {
         content
             .onChange(of: context) { value in
+                withAnimation(.none) {
+                    
+                }
                 guard let context = value else {
                     return
                 }
                 offsets.forEach { offset in
                     switch offset {
                         case .padding(let paddingValue):
-                            //MARK: - Padding Values
-                            let newPadding = context.offset.getValue(paddingValue.axis ?? .vertical) * (paddingValue.speed ?? 100)/100
-                            //MARK: - Padding Conditions
-                            if let minValue = paddingValue.minValue {
-                                guard padding.1 > minValue else {return}
-                            }
-                            if let direction = paddingValue.direction {
-                                guard context.direction == direction else {return}
-                            }
-                            if let minOffset = paddingValue.minOffset {
-                                guard newPadding > minOffset else {return}
-                            }
-                            if let maxValue = paddingValue.maxValue {
-                                guard newPadding < maxValue else {return}
-                            }
-                            //MARK: - Padding Logic
-                            padding.0 = paddingValue.edge
-                            padding.1 = newPadding
-                        case .resize(let resize):
-                            //MARK: - Resize Values
-                            let defaultAxis = resize.size == .height ? ScrollAxis.vertical: .horizontal
-                            let newValue = resize.size == .height ? newHeight: newWidth
-                            let value = context.offset.getValue(resize.axis ?? defaultAxis) * (resize.speed ?? 100)/100
-                            //MARK: - Resize Conditions
-                            guard let oldHeight else {return}
-                            if let direction = resize.direction {
-                                guard context.direction == direction else {return}
-                            }
-                            if let minValue = resize.minValue {
-                                guard newValue ?? 0 > minValue else {return}
-                            }
-                            if let minOffset = resize.minOffset {
-                                guard value > minOffset else {return}
-                            }
-                            //MARK: - Resize Logic
-                            let negativeToAssign = oldHeight - value
-                            let positiveToAssign = oldHeight + value
-                            if let anchor = resize.anchor {
-                                guard let anchorView = context.anchors.first(where: {$0.anchor == anchor}), let point = resize.point, let pointPosition = anchorView.reader?.frame(in: .scrollView).getValue(resize.position ?? .max, axis: resize.axis ?? defaultAxis) else {return}
-                                let target = point.getValue(resize.axis ?? defaultAxis)
-                                if pointPosition < 0 {
-                                    setNewValue(resize.value, size: resize.size)
-                                }else if pointPosition > target + resize.value {
-                                    setNewValue(0, size: resize.size)
-                                }else if pointPosition < target + resize.value {
-                                    setNewValue(resize.value - pointPosition, size: resize.size)
+                            withAnimation(paddingValue.animation) {
+                                //MARK: - Padding Values
+                                let newPadding = context.offset.getValue(paddingValue.axis ?? .vertical) * (paddingValue.speed ?? 100)/100
+                                //MARK: - Padding Conditions
+                                if let minValue = paddingValue.minValue {
+                                    guard padding.1 > minValue else {return}
                                 }
-                            }else {
-                                if negativeToAssign > resize.value  {
-                                    setNewValue(negativeToAssign, size: resize.size)
-                                }else if positiveToAssign < resize.value {
-                                    setNewValue(positiveToAssign, size: resize.size)
+                                if let direction = paddingValue.direction {
+                                    guard context.direction == direction else {return}
+                                }
+                                if let minOffset = paddingValue.minOffset {
+                                    guard newPadding > minOffset else {return}
+                                }
+                                if let maxValue = paddingValue.maxValue {
+                                    guard newPadding < maxValue else {return}
+                                }
+                                //MARK: - Padding Logic
+                                padding.0 = paddingValue.edge
+                                padding.1 = newPadding
+                            }
+                        case .resize(let resize):
+                            withAnimation(resize.animation) {
+                                //MARK: - Resize Values
+                                let defaultAxis = resize.size == .height ? ScrollAxis.vertical: .horizontal
+                                let newValue = resize.size == .height ? newHeight: newWidth
+                                let value = context.offset.getValue(resize.axis ?? defaultAxis) * (resize.speed ?? 100)/100
+                                //MARK: - Resize Conditions
+                                guard let oldHeight else {return}
+                                if let direction = resize.direction {
+                                    guard context.direction == direction else {return}
+                                }
+                                if let minValue = resize.minValue {
+                                    guard newValue ?? 0 > minValue else {return}
+                                }
+                                if let minOffset = resize.minOffset {
+                                    guard value > minOffset else {return}
+                                }
+                                //MARK: - Resize Logic
+                                let negativeToAssign = oldHeight - value
+                                let positiveToAssign = oldHeight + value
+                                if let anchor = resize.anchor {
+                                    guard let anchorView = context.anchors.first(where: {$0.anchor == anchor}), let point = resize.point, let pointPosition = anchorView.reader?.frame(in: .scrollView).getValue(resize.position ?? .max, axis: resize.axis ?? defaultAxis) else {return}
+                                    let target = point.getValue(resize.axis ?? defaultAxis)
+                                    if pointPosition < 0 {
+                                        setNewValue(resize.value, size: resize.size)
+                                    }else if pointPosition > target + resize.value {
+                                        setNewValue(0, size: resize.size)
+                                    }else if pointPosition < target + resize.value {
+                                        setNewValue(resize.value - pointPosition, size: resize.size)
+                                    }
+                                }else {
+                                    if negativeToAssign > resize.value  {
+                                        setNewValue(negativeToAssign, size: resize.size)
+                                    }else if positiveToAssign < resize.value {
+                                        setNewValue(positiveToAssign, size: resize.size)
+                                    }
                                 }
                             }
                     }
