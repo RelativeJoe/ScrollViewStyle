@@ -16,14 +16,16 @@ internal struct OffsetViewModifier: ViewModifier {
     @State private var newHeight: CGFloat?
     @State private var newWidth: CGFloat?
     @State private var padding: (Edge.Set, CGFloat) = (.top, 0)
-    @Environment(\.prefrenceContext) private var context
-    internal init(offsets: [OffsetType], oldHeight: CGFloat?, oldWidth: CGFloat?, alignment: Alignment?) {
+    @Binding internal var context: Context?
+//    @Environment(\.prefrenceContext) private var context
+    internal init(offsets: [OffsetType], oldHeight: CGFloat?, oldWidth: CGFloat?, alignment: Alignment?, context: Binding<Context?>) {
         self.offsets = offsets
         self.oldHeight = oldHeight
         self.oldWidth = oldWidth
         self.alignment = alignment
         self._newHeight = State(wrappedValue: oldHeight)
         self._newWidth = State(wrappedValue: oldWidth)
+        self._context = context
     }
     internal func body(content: Content) -> some View {
         content

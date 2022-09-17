@@ -8,6 +8,7 @@
 import SwiftUI
 
 internal struct AnchorViewModifier: ViewModifier {
+    @Binding var context: Context?
     @State internal var geometryReader: GeometryProxy?
     internal let id: String
     internal func body(content: Content) -> some View {
@@ -24,8 +25,8 @@ internal struct AnchorViewModifier: ViewModifier {
 }
 
 public extension View {
-    @ViewBuilder func anchor(id: CustomStringConvertible) -> some View {
+    @ViewBuilder func anchor(id: CustomStringConvertible, context: Binding<Context?>) -> some View {
         self
-            .modifier(AnchorViewModifier(id: id.description))
+            .modifier(AnchorViewModifier(context: context, id: id.description))
     }
 }

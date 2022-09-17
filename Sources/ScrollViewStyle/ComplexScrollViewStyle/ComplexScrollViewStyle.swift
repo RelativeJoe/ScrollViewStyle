@@ -21,3 +21,11 @@ public struct ComplexScrollViewStyle: ScrollViewStyle {
         return ScrollViewCoordinator()
     }
 }
+
+public struct ScrollViewContainer<Content: View>: View {
+    @State internal var context: Context? = Context(offset: .zero)
+    @ViewBuilder public var content: (Binding<Context?>) -> Content
+    public var body: some View {
+        content($context)
+    }
+}

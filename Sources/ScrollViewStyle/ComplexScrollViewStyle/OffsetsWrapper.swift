@@ -13,6 +13,7 @@ public struct OffsetsWrapper<Content: View>: View {
     internal var content: Content
     @State internal var width: CGFloat?
     @State internal var height: CGFloat?
+    @Binding internal var context: Context?
     internal var alignment: Alignment?
     public var body: some View {
         content
@@ -22,27 +23,27 @@ public struct OffsetsWrapper<Content: View>: View {
             }.onChange(of: .width) { widthy in
                 guard height == nil, width == 0 else {return}
                 width = widthy
-            }.modifier(OffsetViewModifier(offsets: offsets, oldHeight: height, oldWidth: width, alignment: alignment))
+            }.modifier(OffsetViewModifier(offsets: offsets, oldHeight: height, oldWidth: width, alignment: alignment, context: $context))
     }
     public func onScroll(offset: OffsetType) -> OffsetsWrapper {
         var offsetsy = offsets
         offsetsy.append(offset)
-        return OffsetsWrapper(offsets: offsetsy, content: content, width: width, height: height, alignment: alignment)
+        return OffsetsWrapper(offsets: offsetsy, content: content, width: width, height: height, context: $context, alignment: alignment)
     }
     public func onScroll<Offset: ScrollOffset>(_ offset: Offset) -> OffsetsWrapper {
         var offsetsy = offsets
         offsetsy.append(offset.type)
-        return OffsetsWrapper(offsets: offsetsy, content: content, width: width, height: height, alignment: alignment)
+        return OffsetsWrapper(offsets: offsetsy, content: content, width: width, height: height, context: $context, alignment: alignment)
     }
     public func onScroll<Offset: ScrollOffset>(_ offset: @escaping () -> Offset) -> OffsetsWrapper {
         var offsetsy = offsets
         offsetsy.append(offset().type)
-        return OffsetsWrapper(offsets: offsetsy, content: content, width: width, height: height, alignment: alignment)
+        return OffsetsWrapper(offsets: offsetsy, content: content, width: width, height: height, context: $context, alignment: alignment)
     }
 }
 
 public extension View {
-    @ViewBuilder func scrollFrame(width: CGFloat? = nil, height: CGFloat? = nil, alignment: Alignment? = nil) -> OffsetsWrapper<Self> {
-        OffsetsWrapper(content: self, width: width, height: height, alignment: alignment)
+    @ViewBuilder func scrollFrame(width: CGFloat? = nil, height: CGFloat? = nil, alignment: Alignment? = nil, context: Binding<Context?>) -> OffsetsWrapper<Self> {
+        OffsetsWrapper(content: self, width: width, height: height, context: context, alignment: alignment)
     }
 }
