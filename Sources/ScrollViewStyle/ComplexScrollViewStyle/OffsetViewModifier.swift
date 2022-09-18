@@ -123,5 +123,6 @@ extension OffsetViewModifier: ViewModifier {
                 view
                     .frame(width: newWidth, height: newHeight, alignment: alignment ?? .center)
             }.padding(padding.0, padding.1)
+            .opacity(newHeight == 0 ? 0: 1)
     }
 }
