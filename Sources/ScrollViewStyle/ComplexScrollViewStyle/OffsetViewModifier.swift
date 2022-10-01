@@ -175,8 +175,10 @@ extension OffsetViewModifier: ViewModifier {
                             }
                         }
                 }
-            ).frame(width: newWidth, height: newHeight, alignment: alignment ?? .center)
-            .padding(padding.0, padding.1)
+            ).stateModifier(offsets.contains(where: {$0.isResize})) { view in
+                view
+                    .frame(width: newWidth, height: newHeight, alignment: alignment ?? .center)
+            }.padding(padding.0, padding.1)
             .offset(x: offsetValue.0, y: offsetValue.1)
             .opacity(newHeight == 0 ? 0: 1)
     }

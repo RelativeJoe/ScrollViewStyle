@@ -65,4 +65,17 @@ public enum OffsetType {
     case padding(Padding)
     case resize(Resize)
     case offset(Offset)
+    var id: Int {
+        switch self {
+            case .padding:
+                return 0
+            case .resize:
+                return 1
+            case .offset:
+                return 2
+        }
+    }
+    var isResize: Bool {
+        return id == 1
+    }
 }
