@@ -57,6 +57,14 @@ extension OffsetViewModifier: ViewModifier {
                 guard let context = value else {
                     return
                 }
+                guard context.offset.y > 0 || context.offset.x > 0 else {
+                    padding.1 = 0
+                    newHeight = oldHeight
+                    newWidth = oldWidth
+                    offsetValue.0 = 0
+                    offsetValue.1 = 0
+                    return
+                }
                 offsets.forEach { offset in
                     switch offset {
                         case .offset(let offset):
