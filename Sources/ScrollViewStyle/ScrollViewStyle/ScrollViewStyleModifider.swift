@@ -45,7 +45,7 @@ internal struct ScrollViewStyleModifider<Style: ScrollViewStyle>: ViewModifier {
 //                }
                 .onChange(of: context) { newValue in
                     guard bindingContext != nil else {return}
-                    bindingContext = newValue
+                    bindingContext?.update(newValue)
                 }
         }
     }

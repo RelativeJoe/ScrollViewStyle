@@ -13,4 +13,10 @@ public struct Context: Equatable {
     public var proxy: GeometryProxy?
     public var state: Dragging?
     public var anchors = [ReaderAnchor]()
+    internal mutating func update(_ context: Context) {
+        offset = context.offset
+        direction = context.direction
+        proxy = context.proxy
+        state = context.state
+    }
 }
