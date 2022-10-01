@@ -57,4 +57,3 @@ public extension Resize {
         return Resize(size: size, value: value, speed: speed, minOffset: minOffset, minValue: minValue, direction: direction, anchor: anchor.description, point: startPoint, axis: axis, position: position, animation: animation)
     }
 }
-

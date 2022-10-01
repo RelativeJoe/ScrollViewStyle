@@ -17,6 +17,7 @@ internal struct OffsetViewModifier {
     @State private var newHeight: CGFloat?
     @State private var newWidth: CGFloat?
     @State private var padding: (Edge.Set, CGFloat) = (.top, 0)
+    @State private var offsetValue: (CGFloat, CGFloat) = (0, 0)
     @Binding internal var context: Context?
     //    @Environment(\.prefrenceContext) private var context
 }
@@ -58,10 +59,38 @@ extension OffsetViewModifier: ViewModifier {
                 }
                 offsets.forEach { offset in
                     switch offset {
+                        case .offset(let offset):
+                            withAnimation(offset.animation) {
+                                //MARK: - Padding Values
+                                var newOffset = context.offset.getValue(offset.axis ?? .vertical) * (offset.speed ?? 100)/100
+                                //MARK: - Padding Conditions
+                                if let minValue = offset.minValue {
+                                    guard padding.1 > minValue else {return}
+                                }
+                                if let direction = offset.direction {
+                                    guard context.direction == direction else {return}
+                                }
+                                if let maxValue = offset.maxValue {
+                                    guard newOffset < maxValue else {return}
+                                }
+                                if let minOffset = offset.minOffset {
+                                    guard newOffset > minOffset else {return}
+                                }
+                                if offset.invertedOffset {
+                                    newOffset = -newOffset
+                                }
+                                //MARK: - Padding Logic
+                                if offset.edge.contains(.horizontal) {
+                                    offsetValue.0 = newOffset
+                                }
+                                if offset.edge.contains(.vertical) {
+                                    offsetValue.1 = newOffset
+                                }
+                            }
                         case .padding(let paddingValue):
                             withAnimation(paddingValue.animation) {
                                 //MARK: - Padding Values
-                                let newPadding = context.offset.getValue(paddingValue.axis ?? .vertical) * (paddingValue.speed ?? 100)/100
+                                var newPadding = context.offset.getValue(paddingValue.axis ?? .vertical) * (paddingValue.speed ?? 100)/100
                                 //MARK: - Padding Conditions
                                 if let minValue = paddingValue.minValue {
                                     guard padding.1 > minValue else {return}
@@ -74,6 +103,9 @@ extension OffsetViewModifier: ViewModifier {
                                 }
                                 if let maxValue = paddingValue.maxValue {
                                     guard newPadding < maxValue else {return}
+                                }
+                                if paddingValue.invertedOffset {
+                                    newPadding = -newPadding
                                 }
                                 //MARK: - Padding Logic
                                 padding.0 = paddingValue.edge
@@ -124,10 +156,9 @@ extension OffsetViewModifier: ViewModifier {
                             }
                     }
                 }
-            }.stateModifier(oldHeight != nil) { view in
-                view
-                    .frame(width: newWidth, height: newHeight, alignment: alignment ?? .center)
-            }.padding(padding.0, padding.1)
+            }.frame(width: newWidth, height: newHeight, alignment: alignment ?? .center)
+            .padding(padding.0, padding.1)
+            .offset(x: offsetValue.0, y: offsetValue.1)
             .opacity(newHeight == 0 ? 0: 1)
     }
 }

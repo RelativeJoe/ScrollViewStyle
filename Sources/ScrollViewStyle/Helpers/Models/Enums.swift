@@ -53,4 +53,5 @@ public enum PointPosition {
 public enum OffsetType {
     case padding(Padding)
     case resize(Resize)
+    case offset(Offset)
 }
