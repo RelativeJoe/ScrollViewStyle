@@ -82,6 +82,11 @@ extension OffsetViewModifier: ViewModifier {
                         case .resize(let resize):
                             withAnimation(resize.animation) {
                                 //MARK: - Resize Values
+                                guard context.offset.y > 0 || context.offset.x > 0 else {
+                                    newHeight = oldHeight
+                                    newWidth = oldWidth
+                                    return
+                                }
                                 let defaultAxis = resize.size == .height ? ScrollAxis.vertical: .horizontal
                                 let newValue = resize.size == .height ? newHeight: newWidth
                                 let value = context.offset.getValue(resize.axis ?? defaultAxis) * (resize.speed ?? 100)/100
