@@ -126,6 +126,9 @@ extension OffsetViewModifier: ViewModifier {
                                             var newPadding = context.offset.getValue(paddingValue.axis ?? .vertical) * (paddingValue.speed ?? 100)/100
                                             let defaultAxis = (paddingValue.edge == Edge.Set.top || paddingValue.edge == Edge.Set.bottom) ? ScrollAxis.vertical: ScrollAxis.horizontal
                                             //MARK: - Padding Conditions
+                                            guard paddingValue.condition else {
+                                                return
+                                            }
                                             if let minValue = paddingValue.minValue {
                                                 guard padding.1 > minValue else {return}
                                             }
