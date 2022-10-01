@@ -16,8 +16,15 @@ internal struct AnchorViewModifier: ViewModifier {
             .background(
                 GeometryReader { reader in
                     Color.clear
-                        .onChange(of: reader) { newValue in
-                            let anchor = ReaderAnchor(anchor: id, reader: newValue)
+                        .onChange(of: reader.frame(in: .global).minY) { _ in
+                            let anchor = ReaderAnchor(anchor: id, reader: reader)
+                            guard let index = context?.anchors.firstIndex(of: anchor) else {
+                                context?.anchors.append(anchor)
+                                return
+                            }
+                            context?.anchors[index] = anchor
+                        }.onChange(of: reader.frame(in: .global).maxY) { _ in
+                            let anchor = ReaderAnchor(anchor: id, reader: reader)
                             guard let index = context?.anchors.firstIndex(of: anchor) else {
                                 context?.anchors.append(anchor)
                                 return
