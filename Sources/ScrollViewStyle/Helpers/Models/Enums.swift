@@ -42,7 +42,18 @@ public enum Dragging {
     case initiated, iddle, userEnded
 }
 
-public enum ScrollAxis {
+public enum ScrollAxis: OptionSet {
+    public var rawValue: Int {
+        switch self {
+            case .vertical:
+                return 0
+            case .horizontal:
+                return 1
+        }
+    }
+    public init(rawValue: Int) {
+        self = rawValue == 0 ? .vertical: .horizontal
+    }
     case horizontal, vertical
 }
 
