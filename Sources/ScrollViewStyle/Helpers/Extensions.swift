@@ -12,6 +12,12 @@ internal extension CGPoint {
     func getValue(_ axis: ScrollAxis) -> CGFloat {
         return axis == .vertical ? y: x
     }
+    static func +(left: CGPoint, right: CGPoint) -> CGPoint {
+        return CGPoint(x: left.x + right.x, y: left.y + right.y)
+    }
+    static func -(left: CGPoint, right: CGPoint) -> CGPoint {
+        return CGPoint(x: left.x - right.x, y: left.y - right.y)
+    }
 }
 
 internal extension CGRect {

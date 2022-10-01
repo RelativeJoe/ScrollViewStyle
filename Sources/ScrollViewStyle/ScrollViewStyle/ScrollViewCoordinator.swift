@@ -8,6 +8,7 @@
 import SwiftUI
 
 open class ScrollViewCoordinator: NSObject, ScrollViewDelegate {
+    @Published public var differentialOffset = CGPoint.zero
     @Published public var offset = CGPoint.zero
     @Published public var state = Dragging.iddle
     @Published public var direction: ScrollDirection?
@@ -34,6 +35,7 @@ open class ScrollViewCoordinator: NSObject, ScrollViewDelegate {
     //                direction = temporaryDirection
                 }
             }
+            self.differentialOffset = offset - scrollView.contentOffset
             self.offset = scrollView.contentOffset
         }
     }

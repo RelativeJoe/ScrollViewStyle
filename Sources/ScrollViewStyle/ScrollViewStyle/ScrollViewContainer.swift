@@ -8,7 +8,7 @@
 import SwiftUI
 
 public struct ScrollViewContainer<Content: View>: View {
-    @State internal var context: Context? = Context(offset: .zero)
+    @State internal var context: Context? = Context(offset: .zero, differentialOffset: .zero)
     internal var content: (Binding<Context?>) -> Content
     public init(@ViewBuilder content: @escaping (Binding<Context?>) -> Content) {
         self.content = content

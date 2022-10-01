@@ -12,7 +12,7 @@ import STools
 internal struct ScrollViewStyleModifider<Style: ScrollViewStyle>: ViewModifier {
     @StateObject internal var coordinator: Style.ScrollContainer
     @Binding var bindingContext: Context?
-    @State internal var context = Context(offset: .zero)
+    @State internal var context = Context(offset: .zero, differentialOffset: .zero)
     internal let style: Style
     internal init(style: Style, context: Binding<Context?> = .constant(nil)) {
         self.style = style
@@ -34,6 +34,7 @@ internal struct ScrollViewStyleModifider<Style: ScrollViewStyle>: ViewModifier {
                     }
                 ).change(of: coordinator.offset) { newValue in
                     context.offset = newValue
+                    context.differentialOffset = coordinator.differentialOffset
                 }
 //                .onPreferenceChange(ReaderPreferenceKey.self) { value in
 //                    guard let anchor = value else {return}
