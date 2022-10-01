@@ -90,15 +90,34 @@ extension OffsetViewModifier: ViewModifier {
                                             if offset.invertedOffset {
                                                 newOffset = -newOffset
                                             }
-                                            if let anchor = offset.anchor {
-                                                guard let anchorView = context.anchors.first(where: {$0.anchor == anchor}), let point = anchorView.reader?.frame(in: .global).getValue(offset.position ?? .max, axis: offset.axis ?? offset.edge), point != proxy.frame(in: .global).getValue(offset.position ?? .max, axis: offset.axis ?? offset.edge) else {return}
-                                            }
                                             //MARK: - Offset Logic
-                                            if offset.edge.contains(.horizontal) {
-                                                offsetValue.0 = newOffset
-                                            }
-                                            if offset.edge.contains(.vertical) {
-                                                offsetValue.1 = newOffset
+                                            if let anchor = offset.anchor {
+                                                guard let anchorView = context.anchors.first(where: {$0.anchor == anchor}), let point = anchorView.reader?.frame(in: .global).getValue(offset.position ?? .max, axis: offset.axis ?? offset.edge) else {return}
+                                                let viewPoint = proxy.frame(in: .global).getValue(offset.position ?? .max, axis: offset.axis ?? offset.edge)
+                                                if offset.invertedOffset && viewPoint < point {
+                                                    let offsety = viewPoint - point
+                                                    if offset.edge.contains(.horizontal) {
+                                                        offsetValue.0 += offsety
+                                                    }
+                                                    if offset.edge.contains(.vertical) {
+                                                        offsetValue.1 += offsety
+                                                    }
+                                                }else if offset.invertedOffset && viewPoint > point {
+                                                    let offsety = point - viewPoint
+                                                    if offset.edge.contains(.horizontal) {
+                                                        offsetValue.0 -= offsety
+                                                    }
+                                                    if offset.edge.contains(.vertical) {
+                                                        offsetValue.1 -= offsety
+                                                    }
+                                                }
+                                            }else {
+                                                if offset.edge.contains(.horizontal) {
+                                                    offsetValue.0 = newOffset
+                                                }
+                                                if offset.edge.contains(.vertical) {
+                                                    offsetValue.1 = newOffset
+                                                }
                                             }
                                         }
                                     case .padding(let paddingValue):
