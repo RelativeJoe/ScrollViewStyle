@@ -29,7 +29,7 @@ internal extension CGRect {
 
 extension GeometryProxy: Equatable {
     public static func ==(lhs: GeometryProxy, rhs: GeometryProxy) -> Bool {
-        return lhs.size == rhs.size || lhs.frame(in: .global).maxY == rhs.frame(in: .global).maxY || lhs.frame(in: .global).minY == rhs.frame(in: .global).minY || lhs.frame(in: .global).maxX == rhs.frame(in: .global).maxX || lhs.frame(in: .global).minX == rhs.frame(in: .global).minX
+        return lhs.size == rhs.size && lhs.frame(in: .global).maxY == rhs.frame(in: .global).maxY && lhs.frame(in: .global).minY == rhs.frame(in: .global).minY && lhs.frame(in: .global).maxX == rhs.frame(in: .global).maxX && lhs.frame(in: .global).minX == rhs.frame(in: .global).minX
     }
 }
 

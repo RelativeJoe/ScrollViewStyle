@@ -12,28 +12,30 @@ open class ScrollViewCoordinator: NSObject, ScrollViewDelegate {
     @Published public var state = Dragging.iddle
     @Published public var direction: ScrollDirection?
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        var temporaryDirection = [ScrollDirection]()
-        if self.offset.y > scrollView.contentOffset.y {
-            temporaryDirection.append(.top)
-        }else if self.offset.y < scrollView.contentOffset.y {
-            temporaryDirection.append(.bottom)
-        }
-        if self.offset.x > scrollView.contentOffset.x {
-            if temporaryDirection.isEmpty {
-                direction = .leading
-            }else {
-                temporaryDirection.append(.leading)
-//                direction = temporaryDirection
+        DispatchQueue.main.async { [self] in
+            var temporaryDirection = [ScrollDirection]()
+            if self.offset.y > scrollView.contentOffset.y {
+                temporaryDirection.append(.top)
+            }else if self.offset.y < scrollView.contentOffset.y {
+                temporaryDirection.append(.bottom)
             }
-        }else if self.offset.x < scrollView.contentOffset.x {
-            if temporaryDirection.isEmpty {
-                direction = .trailing
-            }else {
-                temporaryDirection.append(.trailing)
-//                direction = temporaryDirection
+            if self.offset.x > scrollView.contentOffset.x {
+                if temporaryDirection.isEmpty {
+                    direction = .leading
+                }else {
+                    temporaryDirection.append(.leading)
+    //                direction = temporaryDirection
+                }
+            }else if self.offset.x < scrollView.contentOffset.x {
+                if temporaryDirection.isEmpty {
+                    direction = .trailing
+                }else {
+                    temporaryDirection.append(.trailing)
+    //                direction = temporaryDirection
+                }
             }
+            self.offset = scrollView.contentOffset
         }
-        self.offset = scrollView.contentOffset
     }
     public func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         state = .initiated
