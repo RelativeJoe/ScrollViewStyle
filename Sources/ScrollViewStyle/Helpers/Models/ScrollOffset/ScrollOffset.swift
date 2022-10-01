@@ -43,7 +43,7 @@ public extension ScrollOffset {
     func when(direction: ScrollDirection) -> Self {
         return initialize(maxValue: nil, speed: nil, minOffset: nil, minValue: nil, direction: direction, axis: nil, animation: nil, differential: true)
     }
-    func differtial() -> Self {
+    func differential() -> Self {
         return initialize(maxValue: nil, speed: nil, minOffset: nil, minValue: nil, direction: nil, axis: nil, animation: nil, differential: true)
     }
 }
