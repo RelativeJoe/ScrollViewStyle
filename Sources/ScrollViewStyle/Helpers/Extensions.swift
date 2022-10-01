@@ -20,6 +20,12 @@ internal extension CGPoint {
     }
 }
 
+extension CGPoint: Comparable {
+    public static func < (lhs: CGPoint, rhs: CGPoint) -> Bool {
+        lhs.x < rhs.x || lhs.y < rhs.y
+    }
+}
+
 internal extension CGRect {
     func getValue(_ position: PointPosition, axis: ScrollAxis) -> CGFloat {
         switch position {

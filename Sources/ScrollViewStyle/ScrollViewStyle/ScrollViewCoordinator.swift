@@ -35,7 +35,11 @@ open class ScrollViewCoordinator: NSObject, ScrollViewDelegate {
     //                direction = temporaryDirection
                 }
             }
-            self.differentialOffset = offset - scrollView.contentOffset
+            if offset > scrollView.contentOffset {
+                self.differentialOffset = offset - scrollView.contentOffset
+            }else {
+                self.differentialOffset = offset + scrollView.contentOffset
+            }
             self.offset = scrollView.contentOffset
         }
     }
