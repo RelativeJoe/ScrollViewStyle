@@ -9,22 +9,20 @@ import SwiftUI
 
 internal struct AnchorViewModifier: ViewModifier {
     @Binding var context: Context?
-//    @State internal var geometryReader: GeometryProxy?
     internal let id: String
     internal func body(content: Content) -> some View {
         content
-            .coordinateSpace(name: id)
             .background(
                 GeometryReader { reader in
                     Color.clear
-                        .onChange(of: reader.frame(in: .named(id)).minY) { _ in
+                        .onChange(of: reader.frame(in: .global).minY) { _ in
                             let anchor = ReaderAnchor(anchor: id, reader: reader)
                             guard let index = context?.anchors.firstIndex(of: anchor) else {
                                 context?.anchors.append(anchor)
                                 return
                             }
                             context?.anchors[index] = anchor
-                        }.onChange(of: reader.frame(in: .named(id)).maxY) { _ in
+                        }.onChange(of: reader.frame(in: .global).maxY) { _ in
                             let anchor = ReaderAnchor(anchor: id, reader: reader)
                             guard let index = context?.anchors.firstIndex(of: anchor) else {
                                 context?.anchors.append(anchor)

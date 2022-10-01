@@ -64,7 +64,7 @@ public extension Padding {
     func relative(to anchor: CustomStringConvertible, at position: PointPosition) -> Padding {
         return Padding(edge: edge, maxValue: maxValue, speed: speed, minOffset: minOffset, minValue: minValue, direction: direction, axis: axis, animation: animation, invertedOffset: invertedOffset, anchor: anchor.description, position: position, condition: condition)
     }
-    func when(_ condition: @escaping () -> Bool) -> Padding {
-        return Padding(edge: edge, maxValue: maxValue, speed: speed, minOffset: minOffset, minValue: minValue, direction: direction, axis: axis, animation: animation, invertedOffset: invertedOffset, anchor: anchor, position: position, condition: condition())
+    func when(_ condition: Bool) -> Padding {
+        return Padding(edge: edge, maxValue: maxValue, speed: speed, minOffset: minOffset, minValue: minValue, direction: direction, axis: axis, animation: animation, invertedOffset: invertedOffset, anchor: anchor, position: position, condition: condition)
     }
 }
