@@ -74,7 +74,7 @@ extension OffsetViewModifier: ViewModifier {
                                         withAnimation(offset.animation) {
                                             //MARK: - Padding Values
                                             var newOffset = context.offset.getValue(offset.axis ?? .vertical) * (offset.speed ?? 100)/100
-                                            //MARK: - Padding Conditions
+                                            //MARK: - Offset Conditions
                                             if let minValue = offset.minValue {
                                                 guard padding.1 > minValue else {return}
                                             }
@@ -90,13 +90,10 @@ extension OffsetViewModifier: ViewModifier {
                                             if offset.invertedOffset {
                                                 newOffset = -newOffset
                                             }
-                                            //MARK: - Offset Logic
                                             if let anchor = offset.anchor {
-                                                guard let anchorView = context.anchors.first(where: {$0.anchor == anchor}), let point = anchorView.reader?.frame(in: .global).getValue(offset.position ?? .max, axis: offset.axis ?? offset.edge) else {return}
-                                                guard point != proxy.frame(in: .global).getValue(offset.position ?? .max, axis: offset.axis ?? offset.edge) else {
-                                                    return
-                                                }
+                                                guard let anchorView = context.anchors.first(where: {$0.anchor == anchor}), let point = anchorView.reader?.frame(in: .global).getValue(offset.position ?? .max, axis: offset.axis ?? offset.edge), point != proxy.frame(in: .global).getValue(offset.position ?? .max, axis: offset.axis ?? offset.edge) else {return}
                                             }
+                                            //MARK: - Offset Logic
                                             if offset.edge.contains(.horizontal) {
                                                 offsetValue.0 = newOffset
                                             }
@@ -108,6 +105,7 @@ extension OffsetViewModifier: ViewModifier {
                                         withAnimation(paddingValue.animation) {
                                             //MARK: - Padding Values
                                             var newPadding = context.offset.getValue(paddingValue.axis ?? .vertical) * (paddingValue.speed ?? 100)/100
+                                            let defaultAxis = (paddingValue.edge == Edge.Set.top || paddingValue.edge == Edge.Set.bottom) ? ScrollAxis.vertical: ScrollAxis.horizontal
                                             //MARK: - Padding Conditions
                                             if let minValue = paddingValue.minValue {
                                                 guard padding.1 > minValue else {return}
@@ -123,6 +121,9 @@ extension OffsetViewModifier: ViewModifier {
                                             }
                                             if paddingValue.invertedOffset {
                                                 newPadding = -newPadding
+                                            }
+                                            if let anchor = paddingValue.anchor {
+                                                guard let anchorView = context.anchors.first(where: {$0.anchor == anchor}), let point = anchorView.reader?.frame(in: .global).getValue(paddingValue.position ?? .max, axis: paddingValue.axis ?? defaultAxis), point != proxy.frame(in: .global).getValue(paddingValue.position ?? .max, axis: paddingValue.axis ?? defaultAxis) else {return}
                                             }
                                             //MARK: - Padding Logic
                                             padding.0 = paddingValue.edge
@@ -168,6 +169,8 @@ extension OffsetViewModifier: ViewModifier {
                                                     setNewValue(negativeToAssign, size: resize.size)
                                                 }else if positiveToAssign < resize.value {
                                                     setNewValue(positiveToAssign, size: resize.size)
+                                                }else {
+                                                    setNewValue(resize.value, size: resize.size)
                                                 }
                                             }
                                         }
@@ -181,5 +184,15 @@ extension OffsetViewModifier: ViewModifier {
             }.padding(padding.0, padding.1)
             .offset(x: offsetValue.0, y: offsetValue.1)
             .opacity(newHeight == 0 ? 0: 1)
+    }
+}
+
+@available(iOS 16.0, *)
+struct Test: Layout {
+    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
+        return proposal.replacingUnspecifiedDimensions()
+    }
+    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
+        
     }
 }
