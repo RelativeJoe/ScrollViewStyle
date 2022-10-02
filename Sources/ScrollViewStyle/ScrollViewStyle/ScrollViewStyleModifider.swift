@@ -35,6 +35,7 @@ internal struct ScrollViewStyleModifider<Style: ScrollViewStyle>: ViewModifier {
                 ).change(of: coordinator.offset) { newValue in
                     context.offset = newValue
                     context.differentialOffset = coordinator.differentialOffset
+                    context.direction = coordinator.direction
                 }
 //                .onPreferenceChange(ReaderPreferenceKey.self) { value in
 //                    guard let anchor = value else {return}
