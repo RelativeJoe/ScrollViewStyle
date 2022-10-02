@@ -100,20 +100,20 @@ extension OffsetViewModifier: ViewModifier {
                                                 guard let anchorView = context.anchors.first(where: {$0.anchor == anchor}), let point = anchorView.reader?.frame(in: .global).getValue(offset.position ?? .max, axis: offset.axis ?? offset.edge) else {return}
                                                 let viewPoint = proxy.frame(in: .global).getValue(offset.position ?? .max, axis: offset.axis ?? offset.edge)
                                                 if offset.invertedOffset && viewPoint < point {
-                                                    let offsety = viewPoint - point
+                                                    let viewOffset = viewPoint - point
                                                     if offset.edge.contains(.horizontal) {
-                                                        offsetValue.0 += offsety
+                                                        offsetValue.0 += viewOffset
                                                     }
                                                     if offset.edge.contains(.vertical) {
-                                                        offsetValue.1 += offsety
+                                                        offsetValue.1 += viewOffset
                                                     }
                                                 }else if offset.invertedOffset && viewPoint > point {
-                                                    let offsety = point - viewPoint
+                                                    let viewOffset = point - viewPoint
                                                     if offset.edge.contains(.horizontal) {
-                                                        offsetValue.0 -= offsety
+                                                        offsetValue.0 -= viewOffset
                                                     }
                                                     if offset.edge.contains(.vertical) {
-                                                        offsetValue.1 -= offsety
+                                                        offsetValue.1 -= viewOffset
                                                     }
                                                 }
                                             }else {
