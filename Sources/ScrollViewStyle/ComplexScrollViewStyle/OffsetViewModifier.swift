@@ -19,6 +19,7 @@ internal struct OffsetViewModifier {
     @State private var newWidth: CGFloat?
     @State private var padding: (Edge.Set, CGFloat) = (.top, 0)
     @State private var offsetValue: (CGFloat, CGFloat) = (0, 0)
+    @State private var totalOffset = CGFloat.zero
     @Binding internal var context: Context?
     //    @Environment(\.prefrenceContext) private var context
 }
@@ -154,12 +155,17 @@ extension OffsetViewModifier: ViewModifier {
                                             if let anchor = paddingValue.anchor {
                                                 guard let anchorView = context.anchors.first(where: {$0.anchor == anchor}), let point = anchorView.reader?.frame(in: .global).getValue(paddingValue.position ?? .max, axis: paddingValue.axis ?? defaultAxis) else {return}
                                                 let viewPoint = proxy.frame(in: .global).getValue(paddingValue.position ?? .max, axis: paddingValue.axis ?? defaultAxis)
+                                                let distance = abs(context.offset.getValue(paddingValue.axis ?? defaultAxis) - (firstOffset ?? .zero).getValue(paddingValue.axis ?? defaultAxis))
                                                 if !paddingValue.invertedOffset && viewPoint > point {
                                                     padding.1 -= abs(viewPoint - point)
                                                 }else if paddingValue.invertedOffset && viewPoint < point {
                                                     padding.1 += abs(point - viewPoint)
-                                                }else if (context.offset - (firstOffset ?? .zero) < .zero && context.direction == .top) || (paddingValue.invertedOffset && viewPoint > point) || (!paddingValue.invertedOffset && viewPoint < point) {
+                                                }else if (distance < totalOffset && context.direction == .top) || (paddingValue.invertedOffset && viewPoint > point) || (!paddingValue.invertedOffset && viewPoint < point) {
                                                     padding.1 = newPadding
+                                                }else {
+                                                    if totalOffset == .zero {
+                                                        totalOffset = abs(point - viewPoint)
+                                                    }
                                                 }
                                             }else {
                                                 padding.1 = newPadding
