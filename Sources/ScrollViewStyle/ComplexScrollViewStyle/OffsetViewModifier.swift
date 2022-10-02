@@ -149,6 +149,7 @@ extension OffsetViewModifier: ViewModifier {
                                             if paddingValue.invertedOffset {
                                                 newPadding = -newPadding
                                             }
+                                            //MARK: - Padding Logic
                                             padding.0 = paddingValue.edge
                                             if let anchor = paddingValue.anchor {
                                                 guard let anchorView = context.anchors.first(where: {$0.anchor == anchor}), let point = anchorView.reader?.frame(in: .global).getValue(paddingValue.position ?? .max, axis: paddingValue.axis ?? defaultAxis) else {return}
@@ -159,12 +160,14 @@ extension OffsetViewModifier: ViewModifier {
                                                 }else if paddingValue.invertedOffset && viewPoint < point {
                                                     padding.1 += abs(point - viewPoint)
                                                     return
-                                                }else if viewPoint == point && context.direction == (paddingValue.invertedOffset ? .bottom: .top){
+                                                }else if viewPoint == point && context.direction == (paddingValue.invertedOffset ? .bottom: .top) {
                                                     return
+                                                }else if context.direction == (paddingValue.invertedOffset ? .top: .bottom) && context.offset - (firstOffset ?? .zero) < .zero {
+                                                    padding.1 = newPadding
                                                 }
+                                            }else {
+                                                padding.1 = newPadding
                                             }
-                                            //MARK: - Padding Logic
-                                            padding.1 = newPadding
                                         }
                                     case .resize(let resize):
                                         withAnimation(resize.animation) {
