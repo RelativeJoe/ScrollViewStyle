@@ -156,12 +156,8 @@ extension OffsetViewModifier: ViewModifier {
                                                 let viewPoint = proxy.frame(in: .global).getValue(paddingValue.position ?? .max, axis: paddingValue.axis ?? defaultAxis)
                                                 if !paddingValue.invertedOffset && viewPoint > point {
                                                     padding.1 -= abs(viewPoint - point)
-                                                    return
                                                 }else if paddingValue.invertedOffset && viewPoint < point {
                                                     padding.1 += abs(point - viewPoint)
-                                                    return
-                                                }else if viewPoint == point && context.offset - (firstOffset ?? .zero) > .zero {
-                                                    return
                                                 }else if context.offset - (firstOffset ?? .zero) < .zero || (paddingValue.invertedOffset && viewPoint > point) || (!paddingValue.invertedOffset && viewPoint < point) {
                                                     padding.1 = newPadding
                                                 }
