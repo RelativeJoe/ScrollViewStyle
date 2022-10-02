@@ -162,7 +162,7 @@ extension OffsetViewModifier: ViewModifier {
                                                     return
                                                 }else if viewPoint == point && context.direction == (paddingValue.invertedOffset ? .bottom: .top) {
                                                     return
-                                                }else if context.direction == (paddingValue.invertedOffset ? .top: .bottom) && context.offset - (firstOffset ?? .zero) < .zero {
+                                                }else if context.direction == (paddingValue.invertedOffset ? .top: .bottom) && context.offset - (firstOffset ?? .zero) < .zero || (paddingValue.invertedOffset && viewPoint > point) || (!paddingValue.invertedOffset && viewPoint < point) {
                                                     padding.1 = newPadding
                                                 }
                                             }else {
