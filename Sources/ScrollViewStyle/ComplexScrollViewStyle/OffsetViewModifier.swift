@@ -160,9 +160,9 @@ extension OffsetViewModifier: ViewModifier {
                                                 }else if paddingValue.invertedOffset && viewPoint < point {
                                                     padding.1 += abs(point - viewPoint)
                                                     return
-                                                }else if viewPoint == point && context.direction == (paddingValue.invertedOffset ? .bottom: .top) {
+                                                }else if viewPoint == point && context.offset - (firstOffset ?? .zero) > .zero {
                                                     return
-                                                }else if context.direction == (paddingValue.invertedOffset ? .top: .bottom) && context.offset - (firstOffset ?? .zero) < .zero || (paddingValue.invertedOffset && viewPoint > point) || (!paddingValue.invertedOffset && viewPoint < point) {
+                                                }else if context.offset - (firstOffset ?? .zero) < .zero || (paddingValue.invertedOffset && viewPoint > point) || (!paddingValue.invertedOffset && viewPoint < point) {
                                                     padding.1 = newPadding
                                                 }
                                             }else {
