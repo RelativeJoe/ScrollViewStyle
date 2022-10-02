@@ -21,11 +21,12 @@ public struct Padding: ScrollOffset {
     public var anchor: String?
     public var position: PointPosition?
     public var differential: Bool
+    public var differentialDirection: ScrollDirection?
     public var type: OffsetType {
         return .padding(self)
     }
-    public func initialize(maxValue: CGFloat?, speed: CGFloat?, minOffset: CGFloat?, minValue: CGFloat?, direction: ScrollDirection?, axis: ScrollAxis?, animation: Animation?, differential: Bool?) -> Padding {
-        return Padding(edge: edge, maxValue: minValue ?? self.maxValue, speed: speed ?? self.speed, minOffset: minOffset ?? self.minOffset, minValue: minValue ?? self.minValue, direction: direction ?? self.direction, axis: axis ?? self.axis, animation: animation ?? self.animation, invertedOffset: invertedOffset, anchor: anchor, position: position, differential: differential ?? self.differential)
+    public func initialize(maxValue: CGFloat?, speed: CGFloat?, minOffset: CGFloat?, minValue: CGFloat?, direction: ScrollDirection?, axis: ScrollAxis?, animation: Animation?, differential: Bool?, differentialDirection: ScrollDirection?) -> Padding {
+        return Padding(edge: edge, maxValue: minValue ?? self.maxValue, speed: speed ?? self.speed, minOffset: minOffset ?? self.minOffset, minValue: minValue ?? self.minValue, direction: direction ?? self.direction, axis: axis ?? self.axis, animation: animation ?? self.animation, invertedOffset: invertedOffset, anchor: anchor, position: position, differential: differential ?? self.differential, differentialDirection: differentialDirection ?? self.differentialDirection)
     }
 }
 
@@ -41,9 +42,9 @@ public extension Padding {
 //MARK: - Public Functions
 public extension Padding {
     func inverted() -> Padding {
-        return Padding(edge: edge, maxValue: maxValue, speed: speed, minOffset: minOffset, minValue: minValue, direction: direction, axis: axis, animation: animation, invertedOffset: true, anchor: anchor, position: position, differential: differential)
+        return Padding(edge: edge, maxValue: maxValue, speed: speed, minOffset: minOffset, minValue: minValue, direction: direction, axis: axis, animation: animation, invertedOffset: true, anchor: anchor, position: position, differential: differential, differentialDirection: differentialDirection)
     }
     func relative(to anchor: CustomStringConvertible, at position: PointPosition) -> Padding {
-        return Padding(edge: edge, maxValue: maxValue, speed: speed, minOffset: minOffset, minValue: minValue, direction: direction, axis: axis, animation: animation, invertedOffset: invertedOffset, anchor: anchor.description, position: position, differential: differential)
+        return Padding(edge: edge, maxValue: maxValue, speed: speed, minOffset: minOffset, minValue: minValue, direction: direction, axis: axis, animation: animation, invertedOffset: invertedOffset, anchor: anchor.description, position: position, differential: differential, differentialDirection: differentialDirection)
     }
 }

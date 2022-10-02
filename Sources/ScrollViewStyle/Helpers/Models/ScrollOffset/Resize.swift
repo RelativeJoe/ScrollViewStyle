@@ -22,11 +22,12 @@ public struct Resize: ScrollOffset {
     public var position: PointPosition?
     public var animation: Animation?
     public var differential: Bool
+    public var differentialDirection: ScrollDirection?
     public var type: OffsetType {
         return .resize(self)
     }
-    public func initialize(maxValue: CGFloat?, speed: CGFloat?, minOffset: CGFloat?, minValue: CGFloat?, direction: ScrollDirection?, axis: ScrollAxis?, animation: Animation?, differential: Bool?) -> Resize {
-        return Resize(size: size, value: value, speed: speed ?? self.speed, minOffset: minOffset ?? self.minOffset, minValue: minValue ?? self.minValue, maxValue: minValue ?? self.maxValue, direction: direction ?? self.direction, anchor: anchor, point: point, axis: axis ?? self.axis, position: position, animation: animation ?? self.animation, differential: differential ?? self.differential)
+    public func initialize(maxValue: CGFloat?, speed: CGFloat?, minOffset: CGFloat?, minValue: CGFloat?, direction: ScrollDirection?, axis: ScrollAxis?, animation: Animation?, differential: Bool?, differentialDirection: ScrollDirection?) -> Resize {
+        return Resize(size: size, value: value, speed: speed ?? self.speed, minOffset: minOffset ?? self.minOffset, minValue: minValue ?? self.minValue, maxValue: minValue ?? self.maxValue, direction: direction ?? self.direction, anchor: anchor, point: point, axis: axis ?? self.axis, position: position, animation: animation ?? self.animation, differential: differential ?? self.differential, differentialDirection: differentialDirection ?? self.differentialDirection)
     }
 }
 
@@ -42,6 +43,6 @@ public extension Resize {
 //MARK: - Public Functions
 public extension Resize {
     func relative(to anchor: CustomStringConvertible, startPoint: CGPoint, at position: PointPosition) -> Resize {
-        return Resize(size: size, value: value, speed: speed, minOffset: minOffset, minValue: minValue, maxValue: maxValue, direction: direction, anchor: anchor.description, point: startPoint, axis: axis, position: position, animation: animation, differential: differential)
+        return Resize(size: size, value: value, speed: speed, minOffset: minOffset, minValue: minValue, maxValue: maxValue, direction: direction, anchor: anchor.description, point: startPoint, axis: axis, position: position, animation: animation, differential: differential, differentialDirection: differentialDirection)
     }
 }

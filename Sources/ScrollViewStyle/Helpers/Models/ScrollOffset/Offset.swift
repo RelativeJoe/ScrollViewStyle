@@ -21,11 +21,12 @@ public struct Offset: ScrollOffset {
     public var position: PointPosition?
     public var invertedOffset: Bool
     public var differential: Bool
+    public var differentialDirection: ScrollDirection?
     public var type: OffsetType {
         return .offset(self)
     }
-    public func initialize(maxValue: CGFloat?, speed: CGFloat?, minOffset: CGFloat?, minValue: CGFloat?, direction: ScrollDirection?, axis: ScrollAxis?, animation: Animation?, differential: Bool?) -> Offset {
-        return Offset(edge: edge, maxValue: maxValue ?? self.maxValue, speed: speed ?? self.speed, minOffset: minOffset ?? self.minOffset, minValue: minValue ?? self.minValue, direction: direction ?? self.direction, axis: axis ?? self.axis, animation: animation ?? self.animation, anchor: anchor, position: position, invertedOffset: invertedOffset, differential: differential ?? self.differential)
+    public func initialize(maxValue: CGFloat?, speed: CGFloat?, minOffset: CGFloat?, minValue: CGFloat?, direction: ScrollDirection?, axis: ScrollAxis?, animation: Animation?, differential: Bool?, differentialDirection: ScrollDirection?) -> Offset {
+        return Offset(edge: edge, maxValue: maxValue ?? self.maxValue, speed: speed ?? self.speed, minOffset: minOffset ?? self.minOffset, minValue: minValue ?? self.minValue, direction: direction ?? self.direction, axis: axis ?? self.axis, animation: animation ?? self.animation, anchor: anchor, position: position, invertedOffset: invertedOffset, differential: differential ?? self.differential, differentialDirection: differentialDirection ?? self.differentialDirection)
     }
 }
 
@@ -41,9 +42,9 @@ public extension Offset {
 //MARK: - Public Functions
 public extension Offset {
     func inverted() -> Offset {
-        return Offset(edge: edge, maxValue: maxValue, speed: speed, minOffset: minOffset, minValue: minValue, direction: direction, axis: axis, animation: animation, anchor: anchor, position: position, invertedOffset: true, differential: differential)
+        return Offset(edge: edge, maxValue: maxValue, speed: speed, minOffset: minOffset, minValue: minValue, direction: direction, axis: axis, animation: animation, anchor: anchor, position: position, invertedOffset: true, differential: differential, differentialDirection: differentialDirection)
     }
     func relative(to anchor: CustomStringConvertible, at position: PointPosition) -> Offset {
-        return Offset(edge: edge, maxValue: maxValue, speed: speed, minOffset: minOffset, minValue: minValue, direction: direction, axis: axis, animation: animation, anchor: anchor.description, position: position, invertedOffset: invertedOffset, differential: differential)
+        return Offset(edge: edge, maxValue: maxValue, speed: speed, minOffset: minOffset, minValue: minValue, direction: direction, axis: axis, animation: animation, anchor: anchor.description, position: position, invertedOffset: invertedOffset, differential: differential, differentialDirection: differentialDirection)
     }
 }
