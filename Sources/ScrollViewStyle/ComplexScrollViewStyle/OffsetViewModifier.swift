@@ -151,11 +151,11 @@ extension OffsetViewModifier: ViewModifier {
                                             if let anchor = paddingValue.anchor {
                                                 guard let anchorView = context.anchors.first(where: {$0.anchor == anchor}), let point = anchorView.reader?.frame(in: .global).getValue(paddingValue.position ?? .max, axis: paddingValue.axis ?? defaultAxis) else {return}
                                                 let viewPoint = proxy.frame(in: .global).getValue(paddingValue.position ?? .max, axis: paddingValue.axis ?? defaultAxis)
-                                                if !paddingValue.invertedOffset && viewPoint < point {
-                                                    padding.1 -= viewPoint - point
+                                                if !paddingValue.invertedOffset && viewPoint > point {
+                                                    padding.1 -= abs(viewPoint - point)
                                                     return
-                                                }else if paddingValue.invertedOffset && viewPoint > point {
-                                                    padding.1 -= point - viewPoint
+                                                }else if paddingValue.invertedOffset && viewPoint < point {
+                                                    padding.1 += abs(point - viewPoint)
                                                     return
                                                 }else if viewPoint == point {
                                                     return
