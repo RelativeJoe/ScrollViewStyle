@@ -16,25 +16,16 @@ open class ScrollViewCoordinator: NSObject, ScrollViewDelegate {
         DispatchQueue.main.async { [self] in
             var temporaryDirection: ScrollDirection!
             if self.offset.y > scrollView.contentOffset.y {
-                temporaryDirection.update(with: .top)
+                temporaryDirection = .top
             }else if self.offset.y < scrollView.contentOffset.y {
-                temporaryDirection.update(with: .bottom)
+                temporaryDirection = .bottom
             }
             if self.offset.x > scrollView.contentOffset.x {
-                if temporaryDirection.isEmpty {
-                    direction = .leading
-                }else {
-                    temporaryDirection.update(with: .leading)
-                    direction = temporaryDirection
-                }
+                temporaryDirection.update(with: .leading)
             }else if self.offset.x < scrollView.contentOffset.x {
-                if temporaryDirection.isEmpty {
-                    direction = .trailing
-                }else {
-                    temporaryDirection.update(with: .trailing)
-                    direction = temporaryDirection
-                }
+                temporaryDirection.update(with: .trailing)
             }
+            direction = temporaryDirection
             if offset > scrollView.contentOffset {
                 self.differentialOffset = offset - scrollView.contentOffset
             }else {
