@@ -99,22 +99,24 @@ extension OffsetViewModifier: ViewModifier {
                                             if let anchor = offset.anchor {
                                                 guard let anchorView = context.anchors.first(where: {$0.anchor == anchor}), let point = anchorView.reader?.frame(in: .global).getValue(offset.position ?? .max, axis: offset.axis ?? offset.edge) else {return}
                                                 let viewPoint = proxy.frame(in: .global).getValue(offset.position ?? .max, axis: offset.axis ?? offset.edge)
-                                                if offset.invertedOffset && viewPoint < point {
-                                                    let viewOffset = viewPoint - point
-                                                    if offset.edge.contains(.horizontal) {
-                                                        offsetValue.0 += viewOffset
-                                                    }
-                                                    if offset.edge.contains(.vertical) {
-                                                        offsetValue.1 += viewOffset
-                                                    }
-                                                }else if offset.invertedOffset && viewPoint > point {
-                                                    let viewOffset = point - viewPoint
+                                                if !offset.invertedOffset && viewPoint > point {
+                                                    let viewOffset = abs(point - viewPoint)
                                                     if offset.edge.contains(.horizontal) {
                                                         offsetValue.0 -= viewOffset
                                                     }
                                                     if offset.edge.contains(.vertical) {
                                                         offsetValue.1 -= viewOffset
                                                     }
+                                                }else if offset.invertedOffset && viewPoint < point {
+                                                    let viewOffset = point - viewPoint
+                                                    if offset.edge.contains(.horizontal) {
+                                                        offsetValue.0 += viewOffset
+                                                    }
+                                                    if offset.edge.contains(.vertical) {
+                                                        offsetValue.1 += viewOffset
+                                                    }
+                                                }else if viewPoint == point {
+                                                    return
                                                 }
                                             }else {
                                                 if offset.edge.contains(.horizontal) {
@@ -157,17 +159,9 @@ extension OffsetViewModifier: ViewModifier {
                                                 }else if paddingValue.invertedOffset && viewPoint < point {
                                                     padding.1 += abs(point - viewPoint)
                                                     return
-                                                }else if viewPoint == point {
+                                                }else if viewPoint == point && context.direction == (paddingValue.invertedOffset ? .bottom: .top) {
                                                     return
                                                 }
-//                                                let diffrence = point - proxy.frame(in: .global).getValue(paddingValue.position ?? .max, axis: paddingValue.axis ?? defaultAxis)
-//                                                if abs(diffrence) < 5 {
-//                                                    padding.0 = paddingValue.edge
-//                                                    padding.1 += diffrence
-//                                                    return
-//                                                }else if diffrence == 0 {
-//                                                    return
-//                                                }
                                             }
                                             //MARK: - Padding Logic
                                             padding.1 = newPadding
