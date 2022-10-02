@@ -158,7 +158,7 @@ extension OffsetViewModifier: ViewModifier {
                                                     padding.1 -= abs(viewPoint - point)
                                                 }else if paddingValue.invertedOffset && viewPoint < point {
                                                     padding.1 += abs(point - viewPoint)
-                                                }else if context.offset - (firstOffset ?? .zero) < .zero || (paddingValue.invertedOffset && viewPoint > point) || (!paddingValue.invertedOffset && viewPoint < point) {
+                                                }else if context.offset - (firstOffset ?? .zero) > .zero || (paddingValue.invertedOffset && viewPoint > point) || (!paddingValue.invertedOffset && viewPoint < point) {
                                                     padding.1 = newPadding
                                                 }
                                             }else {
