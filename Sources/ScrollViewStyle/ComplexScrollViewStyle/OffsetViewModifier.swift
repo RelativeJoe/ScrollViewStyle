@@ -148,7 +148,15 @@ extension OffsetViewModifier: ViewModifier {
                                                 newPadding = -newPadding
                                             }
                                             if let anchor = paddingValue.anchor {
-                                                guard let anchorView = context.anchors.first(where: {$0.anchor == anchor}), let point = anchorView.reader?.frame(in: .global).getValue(paddingValue.position ?? .max, axis: paddingValue.axis ?? defaultAxis), point != proxy.frame(in: .global).getValue(paddingValue.position ?? .max, axis: paddingValue.axis ?? defaultAxis) else {return}
+                                                guard let anchorView = context.anchors.first(where: {$0.anchor == anchor}), let point = anchorView.reader?.frame(in: .global).getValue(paddingValue.position ?? .max, axis: paddingValue.axis ?? defaultAxis) else {return}
+                                                let diffrence = point - proxy.frame(in: .global).getValue(paddingValue.position ?? .max, axis: paddingValue.axis ?? defaultAxis)
+                                                if abs(diffrence) < 5 {
+                                                    paddingValue.0 = paddingValue.edge
+                                                    padding.1 += diffrence
+                                                    return
+                                                }else if diffrence == 0 {
+                                                    return
+                                                }
                                             }
                                             //MARK: - Padding Logic
                                             padding.0 = paddingValue.edge
