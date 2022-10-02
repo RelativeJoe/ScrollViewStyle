@@ -14,6 +14,7 @@ internal struct OffsetViewModifier {
     private let oldHeight: CGFloat?
     private let oldWidth: CGFloat?
     private let alignment: Alignment?
+    @State private var firstOffset: CGPoint?
     @State private var newHeight: CGFloat?
     @State private var newWidth: CGFloat?
     @State private var padding: (Edge.Set, CGFloat) = (.top, 0)
@@ -60,6 +61,9 @@ extension OffsetViewModifier: ViewModifier {
                             guard let context = value else {
                                 return
                             }
+                            if firstOffset == nil {
+                                firstOffset = context.offset
+                            }
                             guard context.offset.y > 0 || context.offset.x > 0 else {
                                 padding.1 = 0
                                 newHeight = oldHeight
@@ -73,7 +77,8 @@ extension OffsetViewModifier: ViewModifier {
                                     case .offset(let offset):
                                         withAnimation(offset.animation) {
                                             //MARK: - Padding Values
-                                            var newOffset = (offset.differential ? context.differentialOffset: context.offset).getValue(offset.axis ?? .vertical) * (offset.speed ?? 100)/100
+                                            let offsety = (offset.differential ? context.differentialOffset: context.offset) - (firstOffset ?? .zero)
+                                            var newOffset = offsety.getValue(offset.axis ?? .vertical) * (offset.speed ?? 100)/100
                                             //MARK: - Offset Conditions
                                             if let minValue = offset.minValue {
                                                 guard padding.1 > minValue else {return}
@@ -123,7 +128,8 @@ extension OffsetViewModifier: ViewModifier {
                                     case .padding(let paddingValue):
                                         withAnimation(paddingValue.animation) {
                                             //MARK: - Padding Values
-                                            var newPadding = (paddingValue.differential ? context.differentialOffset: context.offset).getValue(paddingValue.axis ?? .vertical) * (paddingValue.speed ?? 100)/100
+                                            let offsety = (paddingValue.differential ? context.differentialOffset: context.offset) - (firstOffset ?? .zero)
+                                            var newPadding = offsety.getValue(paddingValue.axis ?? .vertical) * (paddingValue.speed ?? 100)/100
                                             let defaultAxis = (paddingValue.edge == Edge.Set.top || paddingValue.edge == Edge.Set.bottom) ? ScrollAxis.vertical: ScrollAxis.horizontal
                                             //MARK: - Padding Conditions
                                             if let minValue = paddingValue.minValue {
@@ -151,14 +157,10 @@ extension OffsetViewModifier: ViewModifier {
                                     case .resize(let resize):
                                         withAnimation(resize.animation) {
                                             //MARK: - Resize Values
-                                            guard context.offset.y > 0 || context.offset.x > 0 else {
-                                                newHeight = oldHeight
-                                                newWidth = oldWidth
-                                                return
-                                            }
                                             let defaultAxis = resize.size == .height ? ScrollAxis.vertical: .horizontal
                                             let newValue = resize.size == .height ? newHeight: newWidth
-                                            let value = (resize.differential ? context.differentialOffset: context.offset).getValue(resize.axis ?? defaultAxis) * (resize.speed ?? 100)/100
+                                            let offsety = (resize.differential ? context.differentialOffset: context.offset) - (firstOffset ?? .zero)
+                                            let value = offsety.getValue(resize.axis ?? defaultAxis) * (resize.speed ?? 100)/100
                                             //MARK: - Resize Conditions
                                             guard let oldHeight else {return}
                                             if let direction = resize.direction {
