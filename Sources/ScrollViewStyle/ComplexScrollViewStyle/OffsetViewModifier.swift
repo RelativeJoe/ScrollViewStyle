@@ -147,19 +147,27 @@ extension OffsetViewModifier: ViewModifier {
                                             if paddingValue.invertedOffset {
                                                 newPadding = -newPadding
                                             }
+                                            padding.0 = paddingValue.edge
                                             if let anchor = paddingValue.anchor {
                                                 guard let anchorView = context.anchors.first(where: {$0.anchor == anchor}), let point = anchorView.reader?.frame(in: .global).getValue(paddingValue.position ?? .max, axis: paddingValue.axis ?? defaultAxis) else {return}
-                                                let diffrence = point - proxy.frame(in: .global).getValue(paddingValue.position ?? .max, axis: paddingValue.axis ?? defaultAxis)
-                                                if abs(diffrence) < 5 {
-                                                    padding.0 = paddingValue.edge
-                                                    padding.1 += diffrence
-                                                    return
-                                                }else if diffrence == 0 {
+                                                let viewPoint = proxy.frame(in: .global).getValue(paddingValue.position ?? .max, axis: paddingValue.axis ?? defaultAxis)
+                                                if paddingValue.invertedOffset && viewPoint < point {
+                                                    padding.1 -= viewPoint - point
+                                                }else if paddingValue.invertedOffset && viewPoint > point {
+                                                    padding.1 -= point - viewPoint
+                                                }else if viewPoint == point {
                                                     return
                                                 }
+//                                                let diffrence = point - proxy.frame(in: .global).getValue(paddingValue.position ?? .max, axis: paddingValue.axis ?? defaultAxis)
+//                                                if abs(diffrence) < 5 {
+//                                                    padding.0 = paddingValue.edge
+//                                                    padding.1 += diffrence
+//                                                    return
+//                                                }else if diffrence == 0 {
+//                                                    return
+//                                                }
                                             }
                                             //MARK: - Padding Logic
-                                            padding.0 = paddingValue.edge
                                             padding.1 = newPadding
                                         }
                                     case .resize(let resize):
