@@ -1,31 +1,24 @@
-// swift-tools-version: 5.7
-// The swift-tools-version declares the minimum version of Swift required to build this package.
+// swift-tools-version: 5.5
 
 import PackageDescription
 
 let package = Package(
-    name: "ScrollViewStyle",
+    name: "ScrollUI",
     platforms: [
-        .iOS(.v14)
+        .iOS(.v14),
+        .macOS(.v11)
     ],
     products: [
-        .library(
-            name: "ScrollViewStyle",
-            targets: ["ScrollViewStyle"]),
+        .library(name: "ScrollUI", targets: ["ScrollUI"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/siteline/SwiftUI-Introspect", "0.1.4"..<"1.0.0"),
-        .package(url: "https://github.com/TimmysApp/STools", "1.0.74"..<"1.1.0")
+        .package(url: "https://github.com/siteline/SwiftUI-Introspect", "0.1.4"..<"1.0.0")
     ],
     targets: [
         .target(
-            name: "ScrollViewStyle",
+            name: "ScrollUI",
             dependencies: [
-                .product(name: "Introspect", package: "SwiftUI-Introspect"),
-                .product(name: "STools", package: "STools")
+                .product(name: "SwiftUIIntrospect", package: "SwiftUI-Introspect")
             ]),
-        .testTarget(
-            name: "ScrollViewStyleTests",
-            dependencies: ["ScrollViewStyle"]),
     ]
 )
