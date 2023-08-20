@@ -7,7 +7,6 @@
 
 import Foundation
 import SwiftUI
-import Introspect
 import Combine
 
 public protocol ScrollViewStyle {
