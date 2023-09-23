@@ -20,7 +20,7 @@ public struct HorizontalCarouselView<ID: Hashable & Identifiable, Content: View>
     private var selectionMap: ((ID) -> ID?)?
 //MARK: - Body
     public var body: some View {
-        CarouselView(selection: $selection, showsIndicators: showsIndicators, axis: .vertical, data: data, spacing: spacing, horizontalAlignment: .center, verticalAlignment: alignment, content: content, onSelection: onSelection, shouldSelect: shouldSelect, selectionMap: selectionMap)
+        CarouselView(selection: $selection, showsIndicators: showsIndicators, axis: .horizontal, data: data, spacing: spacing, horizontalAlignment: .center, verticalAlignment: alignment, content: content, onSelection: onSelection, shouldSelect: shouldSelect, selectionMap: selectionMap)
     }
 }
 
