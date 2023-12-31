@@ -1,39 +1,25 @@
 //
-//  ExtendedScrollViewStyle.swift
-//  
+//  DefaultScrollViewStyleCoordinator.swift
 //
-//  Created by Joe Maghzal on 29/07/2023.
+//
+//  Created by Joe Maghzal on 31/12/2023.
 //
 
 import SwiftUI
 
-public struct ExtendedScrollViewStyle {
+public extension DefaultScrollViewStyle {
+    class Coordinator: NSObject, ObservableObject {
 //MARK: - Properties
-    @Binding private var context: ScrollContext
+        @Binding var context: ScrollContext
 //MARK: - Initializers
-    public init(context: Binding<ScrollContext>) {
-        self._context = context
-    }
-}
-
-//MARK: - ScrollViewStyle
-extension ExtendedScrollViewStyle: ScrollViewStyle {
-    public func makeCoordinator() -> ExtendedScrollCoordinator {
-        return ExtendedScrollCoordinator(context: $context)
-    }
-}
-
-public class ExtendedScrollCoordinator: NSObject, ObservableObject {
-//MARK: - Properties
-    @Binding var context: ScrollContext
-//MARK: - Initializers
-    init(context: Binding<ScrollContext>) {
-        self._context = context
+        init(context: Binding<ScrollContext>) {
+            self._context = context
+        }
     }
 }
 
 //MARK: - UIScrollViewDelegate
-extension ExtendedScrollCoordinator: UIScrollViewDelegate {
+extension DefaultScrollViewStyle.Coordinator: UIScrollViewDelegate {
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
         context.offset = scrollView.contentOffset
     }

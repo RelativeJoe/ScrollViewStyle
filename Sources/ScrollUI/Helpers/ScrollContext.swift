@@ -16,3 +16,14 @@ public struct ScrollContext {
 public enum ScrollDragingState {
     case started, ending(velocity: CGPoint, targetOffset: UnsafeMutablePointer<CGPoint>), ended(decelerating: Bool)
 }
+
+public extension ScrollDragingState? {
+    var isDragging: Bool {
+        switch self {
+            case .started, .ending:
+                return true
+            case .none, .ended:
+                return false
+        }
+    }
+}

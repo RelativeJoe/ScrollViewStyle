@@ -11,8 +11,9 @@ struct CarouselView<ID: Hashable & Identifiable, Content: View>: View {
 //MARK: - Properties
     @State private var appeared = false
     @State private var size = CGFloat.zero
-    @Binding var selection: ID
+    @Binding var selection: ID?
     let showsIndicators: Bool
+    let itemSize: CGFloat
     let axis: Axis
     let data: [ID]
     let spacing: CGFloat
@@ -32,16 +33,17 @@ struct CarouselView<ID: Hashable & Identifiable, Content: View>: View {
                         Color.clear
                             .frame(width: padding)
                         ForEach(data) { item in
-                            GeometryReader { internalGeometryReader in
+                            HStack(spacing: 0) {
+                                Color.clear
+                                    .frame(width: spacing)
                                 content(item)
-                                    .id(item)
+                                    .contentShape(Rectangle())
                                     .onTapGesture {
                                         onSelection?(item)
+                                        selection = item
                                         select(item, scrollProxy: scrollProxy)
-                                    }.onAppear {
-                                        size = internalGeometryReader.size.value(for: axis)
-                                    }
-                            }
+                                    }.opacity(item == selection ? 1: 0.5)
+                            }.id(item)
                         }
                         Color.clear
                             .frame(width: padding)
@@ -75,7 +77,7 @@ private extension CarouselView {
             appeared = true
             return
         }
-        let factor = size + spacing
+        let factor = itemSize + spacing
         var approximateIndex = Int(round(newValue/factor))
         if approximateIndex > (data.count - 1) {
             approximateIndex = data.count - 1
@@ -87,13 +89,17 @@ private extension CarouselView {
             let generator = UISelectionFeedbackGenerator()
             generator.selectionChanged()
         }
-        selection = data[approximateIndex]
+        let newSelection = data[approximateIndex]
+        if selection == newSelection || selection == nil {
+            selection = newSelection
+            selection = nil
+        }
     }
-    func select(_ item: ID, scrollProxy: ScrollViewProxy) {
-        guard shouldSelect?(item) ?? true else {return}
-        selection = selectionMap?(item) ?? item
+    func select(_ item: ID?, scrollProxy: ScrollViewProxy) {
+        guard let selectionItem = item ?? data.first, shouldSelect?(selectionItem) ?? true else {return}
+        selection = selectionMap?(selectionItem) ?? item
         withAnimation(.easeIn) {
-            scrollProxy.scrollTo(selection, anchor: .bottom)
+            scrollProxy.scrollTo(selection, anchor: .leading)
         }
     }
 }

@@ -9,6 +9,7 @@ import SwiftUI
 
 struct BindedSnapCarouselView<Content: View>: View {
 //MARK: - Properties
+    @State private var itemWidth = CGFloat.zero
     @State private var scrollEffects = ScrollEffect.zero
     @State private var size = CGSize.zero
     @State private var gesturePadding = CGFloat.zero
@@ -17,10 +18,11 @@ struct BindedSnapCarouselView<Content: View>: View {
     let content: Content
     let withScrollBouncing: Bool
     let axis: Axis
-    let spacing: CGFloat?
+    let spacing: CGFloat
     let animation: Animation
     let dynamicGesture: Bool
     let maxBounce: CGFloat?
+    let gestureEnabled: (() -> Bool)?
 //MARK: - Mappings
     private var index: Int {
         let index = max(min(selection, itemsCount - 1), 0)
@@ -44,10 +46,11 @@ struct BindedSnapCarouselView<Content: View>: View {
                     .blur(radius: scrollEffects.blurRadius)
                     .opacity(scrollEffects.opacity)
                     .brightness(scrollEffects.brightness)
-            }.padding(axis == .vertical ? .top: .leading, CGFloat(index) * -proxy.size.value(for: axis))
+            }.padding(axis == .vertical ? .top: .leading, padding(for: proxy))
             .padding(axis == .vertical ? .top: .leading, gesturePadding)
-            .gesture(dragGesture)
+            .simultaneousGesture(dragGesture)
             .onAppear {
+                itemWidth = -proxy.size.value(for: axis) - spacing
                 size = proxy.size
             }
         }.edgesIgnoringSafeArea(.all)
@@ -56,33 +59,45 @@ struct BindedSnapCarouselView<Content: View>: View {
     private var dragGesture: some Gesture {
         DragGesture(minimumDistance: 0)
             .onChanged { newValue in
-                guard dynamicGesture else {return}
+                guard dynamicGesture, gestureEnabled?() ?? true else {return}
                 let offset = newValue.translation.value(for: axis)
                 let addition = offset < 0
                 if addition && reachedEnd || !addition && reachedStart {
                     guard withScrollBouncing, abs(offset) < maxBounce ?? 1000 else {return}
                 }
-                gesturePadding = offset
+                gesturePadding = max(min(offset, abs(itemWidth)), itemWidth)
             }.onEnded { newValue in
-                toggleIndex(addition: newValue.translation.value(for: axis) < 0)
-                withAnimation(animation) {
+                guard gestureEnabled?() ?? true else {return}
+                let offset = newValue.translation.value(for: axis)
+                let addition = offset < 0
+                if let nextIndex = nextIndex(addition: addition), abs(offset) > 150 {
                     gesturePadding = 0
+                    selection = nextIndex
+                }else {
+                    withAnimation {
+                        gesturePadding = 0
+                    }
                 }
             }
     }
 //MARK: - Functions
-    private func toggleIndex(addition: Bool) {
+    private func nextIndex(addition: Bool) -> Int? {
         let newIndex = selection + (addition ? 1: -1)
-        guard newIndex >= 0 && newIndex < itemsCount else {return}
-        selection = newIndex
+        guard newIndex >= 0 && newIndex < itemsCount else {
+            return nil
+        }
+        return newIndex
+    }
+    private func padding(for proxy: GeometryProxy) -> CGFloat {
+        return itemWidth * CGFloat(index)
     }
     @ViewBuilder private func stack(@ViewBuilder view: () -> some View) -> some View {
         if axis == .horizontal {
-            HStack(spacing: spacing) {
+            LazyHStack(spacing: spacing) {
                 view()
             }
         }else {
-            VStack(spacing: spacing) {
+            LazyVStack(spacing: spacing) {
                 view()
             }
         }
