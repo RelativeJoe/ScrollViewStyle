@@ -24,23 +24,23 @@ extension DefaultScrollViewStyle.Coordinator: UIScrollViewDelegate {
         context.offset = scrollView.contentOffset
     }
     public func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-        context.dragging = .started
-        context.scrolling = true
+        context.dragState = .started
+        context.isScrolling = true
     }
     public func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
-        context.dragging = .ending(velocity: velocity, targetOffset: targetContentOffset)
+        context.dragState = .ending(velocity: velocity, targetOffset: targetContentOffset)
     }
     public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-        context.dragging = .ended(decelerating: decelerate)
+        context.dragState = .ended(decelerating: decelerate)
         if !decelerate {
-            context.scrolling = false
+            context.isScrolling = false
         }
     }
     public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        context.scrolling = false
+        context.isScrolling = false
     }
     public func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
-        context.scrolling = false
-        context.dragging = nil
+        context.isScrolling = false
+        context.dragState = nil
     }
 }

@@ -8,9 +8,12 @@
 import Foundation
 
 public struct ScrollContext {
-    public var scrolling = false
+    public var isScrolling = false
     public var offset = CGPoint.zero
-    public var dragging: ScrollDragingState?
+    public var dragState: ScrollDragingState?
+    public var isDragging: Bool {
+        return dragState.isDragging
+    }
 }
 
 public enum ScrollDragingState {
