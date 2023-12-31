@@ -23,7 +23,7 @@ extension DefaultScrollViewStyle: ScrollViewStyle {
     }
 }
 
-extension ScrollViewStyle where Self == DefaultScrollViewStyle {
+public extension ScrollViewStyle where Self == DefaultScrollViewStyle {
     static func defaultStyle(context: Binding<ScrollContext>) -> DefaultScrollViewStyle {
         return DefaultScrollViewStyle(context: context)
     }
