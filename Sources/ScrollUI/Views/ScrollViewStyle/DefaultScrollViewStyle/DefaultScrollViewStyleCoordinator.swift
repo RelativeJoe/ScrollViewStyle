@@ -21,7 +21,9 @@ public extension DefaultScrollViewStyle {
 //MARK: - UIScrollViewDelegate
 extension DefaultScrollViewStyle.Coordinator: UIScrollViewDelegate {
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        context.offset = scrollView.contentOffset
+        DispatchQueue.main.async {
+            self.context.offset = scrollView.contentOffset
+        }
     }
     public func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         context.dragState = .started
