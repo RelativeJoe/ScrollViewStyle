@@ -12,7 +12,7 @@ let package = Package(
         .library(name: "ScrollUI", targets: ["ScrollUI"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/siteline/SwiftUI-Introspect", "0.1.4"..<"1.0.0")
+        .package(url: "https://github.com/siteline/SwiftUI-Introspect", "0.1.4"..<"1.3.0")
     ],
     targets: [
         .target(
