@@ -17,7 +17,7 @@ internal struct ScrollViewStyleModifider<Style: ScrollViewStyle>: ViewModifier {
     }
     internal func body(content: Content) -> some View {
         content
-            .introspect(.scrollView, on: .iOS(.v13, .v14, .v15, .v16, .v17)) { scrollView in
+            .introspect(.scrollView, on: .iOS(.v13, .v14, .v15, .v16, .v17 , .v18)) { scrollView in
                 style.make(uiScrollView: scrollView)
                 scrollView.delegate = coordinator
             }
